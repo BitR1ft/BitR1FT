@@ -15,26 +15,7 @@
 
 
 ## 🌍 **Connect with Me**
-<p align="center">
-  <a href="https://instagram.com/_4deel">
-    <img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white" alt="Instagram">
-  </a>
-  <a href="https://linkedin.com/in/4deel">
-    <img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white" alt="LinkedIn">
-  </a>
-  <a href="https://medium.com/@bitr1ft">
-    <img src="https://img.shields.io/badge/Medium-12100E?logo=medium&logoColor=white" alt="Medium">
-  </a>
-  <a href="https://reddit.com/user/BitR1FT">
-    <img src="https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white" alt="Reddit">
-  </a>
-  <a href="https://x.com/bitr1ft">
-    <img src="https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white" alt="X">
-  </a>
-  <a href="mailto:4deel@proton.me">
-    <img src="https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white" alt="Email">
-  </a>
-</p>
+
 <ul>
   <li><b>📩 Email:</b> <a href="mailto:4deel@proton.me">4deel@proton.me</a></li>
   <li><b>📜 Blog:</b> <a href="https://medium.com/@bitr1ft" target="_blank">https://medium.com/@bitr1ft</a></li>
@@ -54,6 +35,29 @@
 <h2 align="center"> 📈 Quick Stats </h2> 
 <p align="center">
 <img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >
+</p>
+
+
+
+<p align="center">
+  <a href="https://instagram.com/_4deel">
+    <img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white" alt="Instagram">
+  </a>
+  <a href="https://linkedin.com/in/4deel">
+    <img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white" alt="LinkedIn">
+  </a>
+  <a href="https://medium.com/@bitr1ft">
+    <img src="https://img.shields.io/badge/Medium-12100E?logo=medium&logoColor=white" alt="Medium">
+  </a>
+  <a href="https://reddit.com/user/BitR1FT">
+    <img src="https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white" alt="Reddit">
+  </a>
+  <a href="https://x.com/bitr1ft">
+    <img src="https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white" alt="X">
+  </a>
+  <a href="mailto:4deel@proton.me">
+    <img src="https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white" alt="Email">
+  </a>
 </p>
 
 
