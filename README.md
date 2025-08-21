@@ -35,9 +35,9 @@
 
 <h2 align="center"> 📈 Quick Stats </h2> 
 <p align="center">
-<img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >
+<!--<img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >-->
 <img src="https://nirzak-streak-stats.vercel.app/?user=bitr1ft&theme=dark&hide_border=false" alt="bitr1ft" >
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bitr1ft&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact" alt="bitr1ft" >
+<!--<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bitr1ft&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact" alt="bitr1ft" >-->
 </p>
 
 <br><br>
