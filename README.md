@@ -8,9 +8,13 @@
   <img src="https://img.shields.io/badge/splunk-%23000000.svg?style=for-the-badge&logo=splunk&logoColor=white"/>
 </p>
 
+
+
 <h3 align="center">Reverse engineering and pwn are my jam — if it crashes, I’m probably smiling.</h3>
 
-
+<p align="center">
+  [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/_4deel) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/4deel) [![Medium](https://img.shields.io/badge/Medium-12100E?logo=medium&logoColor=white)](https://medium.com/@bitr1ft) [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white)](https://reddit.com/user/BitR1FT) [![X](https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white)](https://x.com/bitr1ft) [![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:4deel@proton.me) 
+</p>
 
 
 
@@ -28,10 +32,14 @@
 })();
 ```
 
+
+
 <h2 align="center"> 📈 Quick Stats </h2> 
 <p align="center">
 <img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >
 </p>
+
+<p align="center"> ![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark) </p>
 
 [![](https://visitcount.itsvg.in/api?id=bitr1ft&icon=0&color=0)](https://visitcount.itsvg.in)
 
