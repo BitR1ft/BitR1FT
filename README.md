@@ -15,12 +15,6 @@
 
 
 ## 🌍 **Connect with Me**
-<ul>
-  <li><b>📩 Email:</b> <a href="mailto:4deel@proton.me">4deel@proton.me</a></li>
-  <li><b>📜 Blog:</b> <a href="https://medium.com/@bitr1ft" target="_blank">https://medium.com/@bitr1ft</a></li>
-  <li><b>💬 Twitter:</b> <a href="https://x.com/BitR1FT" target="_blank">@BitR1FT</a></li>
-  <li><b>📈 LinkedIn:</b> <a href="https://www.linkedin.com/in/4deel/" target="_blank">https://www.linkedin.com/in/4deel/</a></li>
-</ul>
 <p align="center">
   <a href="https://instagram.com/_4deel">
     <img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white" alt="Instagram">
@@ -41,6 +35,13 @@
     <img src="https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white" alt="Email">
   </a>
 </p>
+<ul>
+  <li><b>📩 Email:</b> <a href="mailto:4deel@proton.me">4deel@proton.me</a></li>
+  <li><b>📜 Blog:</b> <a href="https://medium.com/@bitr1ft" target="_blank">https://medium.com/@bitr1ft</a></li>
+  <li><b>💬 Twitter:</b> <a href="https://x.com/BitR1FT" target="_blank">@BitR1FT</a></li>
+  <li><b>📈 LinkedIn:</b> <a href="https://www.linkedin.com/in/4deel/" target="_blank">https://www.linkedin.com/in/4deel/</a></li>
+</ul>
+
 
 ```javascript
 (() => {
