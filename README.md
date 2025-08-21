@@ -28,6 +28,6 @@
 
 <h2 align="center"> 📈 Quick Stats </h2> 
 <p align="center">
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=bitr1ft&show_icons=true&locale=en&layout=compact" alt="bitr1ft" >
+<img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&locale=en" alt="bitr1ft" >
 </p>
 
