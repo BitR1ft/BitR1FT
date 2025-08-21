@@ -14,8 +14,8 @@
 
 ## 🌍 **Connect with Me**
 <ul>
-  <li><b>📜 Blog:</b> <a href="https://medium.com/@bitr1ft" target="_blank">https://medium.com/@bitr1ft</a></li>
   <li><b>📩 Email:</b> <a href="mailto:4deel@proton.me">4deel@proton.me</a></li>
+  <li><b>📜 Blog:</b> <a href="https://medium.com/@bitr1ft" target="_blank">https://medium.com/@bitr1ft</a></li>
   <li><b>💬 Twitter:</b> <a href="https://x.com/BitR1FT" target="_blank">@BitR1FT</a></li>
   <li><b>📈 LinkedIn:</b> <a href="https://www.linkedin.com/in/4deel/" target="_blank">https://www.linkedin.com/in/4deel/</a></li>
 </ul>
