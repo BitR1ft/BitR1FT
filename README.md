@@ -12,9 +12,9 @@
 
 <h3 align="center">Reverse engineering and pwn are my jam — if it crashes, I’m probably smiling.</h3>
 
+<br><br>
 
-
-## 🌍 **Connect with Me**
+## **Connect with Me**
 
 <ul>
   <li><b>📩 Email:</b> <a href="mailto:4deel@proton.me">4deel@proton.me</a></li>
@@ -37,6 +37,7 @@
 <img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >
 </p>
 
+<br><br>
 
 
 <p align="center">
