@@ -2,7 +2,6 @@
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B;Welcome+to+my+digital+playground!;Cybersecurity+%7C+Reverse+Engineering+%7C+Pwn;Breaking+things+to+understand+them+better!" alt="Typing SVG" />
 </div>
 
-<h2 align="center">🚀 About Me</h2>
 
 <p align="center">
   <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 😈
@@ -13,8 +12,6 @@
 <h2 align="center">🛠️ Tech Arsenal</h2>
 
 <div align="center">
-
-### 🔐 Cybersecurity & Tools
 <p>
   <img src="https://img.shields.io/badge/Cybersecurity-%2314354C.svg?&style=for-the-badge&logo=security&logoColor=white"/>
   <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
@@ -23,7 +20,6 @@
   <img src="https://img.shields.io/badge/Wireshark-%231679A7.svg?&style=for-the-badge&logo=wireshark&logoColor=white"/>
 </p>
 
-### 💻 Programming Languages
 <p>
   <img src="https://img.shields.io/badge/Python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/C++-%2300599C.svg?&style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
@@ -32,7 +28,6 @@
   <img src="https://img.shields.io/badge/Bash-%234EAA25.svg?&style=for-the-badge&logo=gnubash&logoColor=white"/>
 </p>
 
-### 🔧 Tools & Platforms
 <p>
   <img src="https://img.shields.io/badge/Linux-%23FCC624.svg?&style=for-the-badge&logo=linux&logoColor=black"/>
   <img src="https://img.shields.io/badge/Kali%20Linux-%23557C94.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
