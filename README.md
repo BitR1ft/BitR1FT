@@ -1,5 +1,7 @@
-<h1 align="center">Hi 👋, I'm Adeel Haider</h1>
-
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B" alt="Typing SVG" />
+</div>
+<br>
 <p align="center">
   <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
   <img src="https://img.shields.io/badge/c++-%2300599C.svg?&style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
