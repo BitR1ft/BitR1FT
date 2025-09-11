@@ -22,6 +22,13 @@
 
 ```diff
 
+  ____  _ _   ____  __ ______ ______
+ |  _ \(_) | |  _ \/  |  ____||__  __|
+ | |_) |_| |_| |_) |  | |__     | |   
+ |  _ <| | __||  _ <|  |  __|   | |   
+ | |_) | | |_ | |_) |  | |      | |   
+ |____/|_|\__||____/|__|_|      |_|   
+
 + Currently working on: - Learning x86 Assembly & control flow
 + Learning: Disassembly, shellcode, and basic malware logic 
 + Latest achievement: Reversed first crackme, traced execution
@@ -42,12 +49,7 @@
 <div align="center">
 
 ```diff
-     ____  _ _   ____  __ ______ ______
-    |  _ \(_) | |  _ \/  |  ____||__  __|
-    | |_) |_| |_| |_) |  | |__     | |   
-    |  _ <| | __||  _ <|  |  __|    | |   
-    | |_) | | |_ | |_) |  | |       | |   
-    |____/|_|\__||____/|__|_|       |_|   
+ 
 
 ```
 </div>
