@@ -8,7 +8,7 @@
   
 ```ascii
 ╔══════════════════════════════════════════════════════════╗
-║  🎯 Cybersecurity Enthusiast | 🔍 Reverse Engineer      ║  
+ ║  🎯 Cybersecurity Enthusiast | 🔍 Reverse Engineer      ║  
 ║  💻 Code Breaker | 🛡️ Digital Forensics Specialist      ║
 ║  🐛 Bug Hunter | ⚡ Penetration Tester                  ║
 ╚══════════════════════════════════════════════════════════╝
