@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B;Welcome+to+my+digital+playground!;Cybersecurity+%7C+Reverse+Engineering+%7C+Pwn;Breaking+things+to+understand+them+better!" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B;Welcome+to+my+digital+playground!" alt="Typing SVG" />
 </div>
 
 
@@ -7,7 +7,7 @@
   <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 😈
 </p>
 
----
+
 
 <h2 align="center">🛠️ Tech Arsenal</h2>
 
