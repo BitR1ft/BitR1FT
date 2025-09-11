@@ -16,7 +16,7 @@
   <img src="https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/Assembly-%23000000.svg?&style=for-the-badge&logo=assemblyscript&logoColor=white"/>
 </p>
-<h2 align="center">🔥 Current Status</h2>
+<br>
 
 <div align="center">
 
