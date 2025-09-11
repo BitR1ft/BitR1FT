@@ -12,6 +12,8 @@
   <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"/>
   <img src="https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/Assembly-%23000000.svg?&style=for-the-badge&logo=assemblyscript&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Reverse%20Engineering-%234B0082.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/>
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
