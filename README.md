@@ -5,6 +5,14 @@
   <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 😈
 </p>
 
+//     ____  _ _   ____  __ ______ ______
+//    |  _ \(_) | |  _ \/  |  ____||__  __|
+//    | |_) |_| |_| |_) |  | |__     | |   
+//    |  _ <| | __||  _ <|  |  __|    | |   
+//    | |_) | | |_ | |_) |  | |       | |   
+//    |____/|_|\__||____/|__|_|       |_|   
+//
+
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
@@ -40,12 +48,6 @@
   <li><b>📈 LinkedIn:</b> <a href="https://www.linkedin.com/in/4deel/" target="_blank">https://www.linkedin.com/in/4deel/</a></li>
 </ul>
 
-
-```javascript
-(() => {
-  console.log("Cybersecurity is a journey of constant learning and breaking!");
-})();
-```
 
 
 
