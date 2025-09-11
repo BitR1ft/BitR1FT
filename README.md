@@ -8,8 +8,9 @@
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Reverse%20Engineering-%234B0082.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/>
   <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Reverse%20Engineering-%234B0082.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/><br>
+  <br>
   <img src="https://img.shields.io/badge/c++-%2300599C.svg?&style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
   <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"/>
   <img src="https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
