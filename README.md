@@ -1,6 +1,4 @@
-<div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B;Welcome+to+my+digital+playground!" alt="Typing SVG" />
-</div>
+<h1 align="center">Hey there! I'm Adeel Haider👋</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
@@ -70,12 +68,6 @@
 
 
 [![](https://visitcount.itsvg.in/api?id=bitr1ft&icon=0&color=0)](https://visitcount.itsvg.in)
-
-
-
-
-
-
 
 
 
