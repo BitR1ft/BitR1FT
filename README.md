@@ -1,6 +1,7 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=00D9FF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=FFFFFF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B" alt="Typing SVG" />
 </div>
+<h3 align="center">Reverse engineering and pwn are my jam — if it crashes, I’m probably smiling.</h3>
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
@@ -16,7 +17,7 @@
 
 
 
-<h3 align="center">Reverse engineering and pwn are my jam — if it crashes, I’m probably smiling.</h3>
+
 
 <br><br>
 
