@@ -4,18 +4,6 @@
 
 <h2 align="center">🚀 About Me</h2>
 
-<div align="center">
-  
-```ascii
-╔══════════════════════════════════════════════════════════╗
- ║  🎯 Cybersecurity Enthusiast | 🔍 Reverse Engineer      ║  
-║  💻 Code Breaker | 🛡️ Digital Forensics Specialist      ║
-║  🐛 Bug Hunter | ⚡ Penetration Tester                  ║
-╚══════════════════════════════════════════════════════════╝
-```
-
-</div>
-
 <p align="center">
   <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 😈
 </p>
