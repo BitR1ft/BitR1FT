@@ -3,15 +3,23 @@
 </div>
 
 
-
-<p align="center">
-  <img src="https://img.shields.io/badge/cybersecurity-%2314354C.svg?&style=for-the-badge&logo=cybersecurity&logoColor=white"/>
-  <img src="https://img.shields.io/badge/c++-%2300599C.svg?&style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
-  <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/splunk-%23000000.svg?style=for-the-badge&logo=splunk&logoColor=white"/>
+<div align="center">
+<p>
+  <img src="https://img.shields.io/badge/Cybersecurity-%2314354C.svg?&style=for-the-badge&logo=security&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Reverse%20Engineering-%234B0082.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/>
 </p>
 
+<p>
+  <img src="https://img.shields.io/badge/Python-%233776AB.svg?&style=for-the-badge&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/C++-%2300599C.svg?&style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Assembly-%23000000.svg?&style=for-the-badge&logo=assemblyscript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Bash-%234EAA25.svg?&style=for-the-badge&logo=gnubash&logoColor=white"/>
+</p>
+
+
+</div>
 
 
 <h3 align="center">Reverse engineering and pwn are my jam — if it crashes, I’m probably smiling.</h3>
