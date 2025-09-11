@@ -8,16 +8,11 @@
 </p>
 
 
-
-<h2 align="center">🛠️ Tech Arsenal</h2>
-
 <div align="center">
 <p>
   <img src="https://img.shields.io/badge/Cybersecurity-%2314354C.svg?&style=for-the-badge&logo=security&logoColor=white"/>
   <img src="https://img.shields.io/badge/Penetration%20Testing-%23FF6B6B.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
   <img src="https://img.shields.io/badge/Reverse%20Engineering-%234B0082.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Splunk-%23000000.svg?style=for-the-badge&logo=splunk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Wireshark-%231679A7.svg?&style=for-the-badge&logo=wireshark&logoColor=white"/>
 </p>
 
 <p>
@@ -28,13 +23,6 @@
   <img src="https://img.shields.io/badge/Bash-%234EAA25.svg?&style=for-the-badge&logo=gnubash&logoColor=white"/>
 </p>
 
-<p>
-  <img src="https://img.shields.io/badge/Linux-%23FCC624.svg?&style=for-the-badge&logo=linux&logoColor=black"/>
-  <img src="https://img.shields.io/badge/Kali%20Linux-%23557C94.svg?&style=for-the-badge&logo=kalilinux&logoColor=white"/>
-  <img src="https://img.shields.io/badge/IDA%20Pro-%23000000.svg?&style=for-the-badge&logo=ida&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Ghidra-%23000000.svg?&style=for-the-badge&logo=ghidra&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Burp%20Suite-%23FF6633.svg?&style=for-the-badge&logo=burpsuite&logoColor=white"/>
-</p>
 
 </div>
 
