@@ -94,19 +94,40 @@
 
 ---
 
+<h2 align="center">🔥 Current Status</h2>
+
+<div align="center">
+
+```diff
++ 🎯 Currently working on: Advanced Malware Analysis Framework
++ 📚 Learning: Zero-day exploit development techniques  
++ 🏆 Latest achievement: Discovered 3 CVEs this quarter
++ ☕ Coffee count today: 4/∞
++ 🎵 Coding soundtrack: Cyberpunk 2077 OST
+```
+
+<p>
+  <img src="https://img.shields.io/badge/Status-Actively%20Hacking-%23FF0000?style=for-the-badge&logo=statuspage&logoColor=white" alt="Status"/>
+  <img src="https://img.shields.io/badge/Availability-Open%20for%20Collaboration-%2300FF00?style=for-the-badge&logo=handshake&logoColor=white" alt="Availability"/>
+</p>
+
+</div>
+
+---
+
 <h2 align="center">📊 GitHub Analytics</h2>
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical&hide_border=true&include_all_commits=true&count_private=true" alt="GitHub Stats" height="200"/>
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=bitr1ft&theme=radical&hide_border=true" alt="GitHub Streak" height="200"/>
+  <img src="https://github-readme-stats.vercel.app/api?username=BitR1ft&show_icons=true&theme=radical&hide_border=true&include_all_commits=true&count_private=true" alt="GitHub Stats" height="200"/>
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=BitR1ft&theme=radical&hide_border=true" alt="GitHub Streak" height="200"/>
 </div>
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bitr1ft&theme=radical&hide_border=true&include_all_commits=true&count_private=true&layout=compact&langs_count=10" alt="Top Languages" height="200"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=BitR1ft&theme=radical&hide_border=true&include_all_commits=true&count_private=true&layout=compact&langs_count=10" alt="Top Languages" height="200"/>
 </div>
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=bitr1ft&theme=redical&hide_border=true&custom_title=BitR1FT's%20GitHub%20Activity%20Graph" alt="GitHub Activity Graph"/>
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=BitR1ft&theme=redical&hide_border=true&custom_title=BitR1FT's%20GitHub%20Activity%20Graph" alt="GitHub Activity Graph"/>
 </div>
 
 ---
@@ -114,7 +135,7 @@
 <h2 align="center">🐍 Contribution Snake</h2>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/bitr1ft/bitr1ft/output/github-contribution-grid-snake-dark.svg" alt="Snake Animation" />
+  <img src="https://raw.githubusercontent.com/BitR1ft/BitR1ft/output/github-contribution-grid-snake-dark.svg" alt="Snake Animation" />
 </div>
 
 ---
@@ -124,6 +145,15 @@
 <div align="center">
 
 ```javascript
+//     ____  _ _   ____  __ ______ ______
+//    |  _ \(_) | |  _ \/  |  ____||__  __|
+//    | |_) |_| |_| |_) |  | |__     | |   
+//    |  _ <| | __||  _ <|  |  __|    | |   
+//    | |_) | | |_ | |_) |  | |       | |   
+//    |____/|_|\__||____/|__|_|       |_|   
+//
+//    🔐 Cybersecurity Professional & Code Breaker 🔐
+
 const bitr1ft = {
   pronouns: "He/Him",
   location: "Debugging the Matrix 🌐",
@@ -140,10 +170,21 @@ const bitr1ft = {
     }
   },
   
+  hackingQuote: () => {
+    const quotes = [
+      "There is no patch for human stupidity",
+      "The best way to learn is to break things",
+      "Security through obscurity is not security",
+      "Trust, but verify... then verify again"
+    ];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  },
+  
   motto: "If it exists, it can be pwned! 💀"
 };
 
 console.log("Welcome to my digital realm! 👾");
+console.log(`Daily wisdom: ${bitr1ft.hackingQuote()}`);
 ```
 
 </div>
@@ -247,11 +288,11 @@ console.log("Welcome to my digital realm! 👾");
 ### 👀 Profile Views & Visitors
 
 <p>
-  <img src="https://komarev.com/ghpvc/?username=bitr1ft&label=Profile%20Views&color=0e75b6&style=for-the-badge" alt="Profile Views" />
-  <img src="https://img.shields.io/github/followers/bitr1ft?label=Followers&style=for-the-badge&color=blue" alt="Followers" />
+  <img src="https://komarev.com/ghpvc/?username=BitR1ft&label=Profile%20Views&color=0e75b6&style=for-the-badge" alt="Profile Views" />
+  <img src="https://img.shields.io/github/followers/BitR1ft?label=Followers&style=for-the-badge&color=blue" alt="Followers" />
 </p>
 
-[![](https://visitcount.itsvg.in/api?id=bitr1ft&icon=0&color=0)](https://visitcount.itsvg.in)
+[![](https://visitcount.itsvg.in/api?id=BitR1ft&icon=0&color=0)](https://visitcount.itsvg.in)
 
 </div>
 
