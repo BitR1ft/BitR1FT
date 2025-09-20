@@ -29,9 +29,9 @@
  | |_) | | |_ | | \ |  | |      | |   
  |____/|_|\__||_|  \|__|_|      |_|   
 
-+ Currently working on:   x86 Assembly & control flow
-+ Learning:   Disassembly, shellcode, and basic malware logic 
-+ Latest achievement:   Reversed first crackme, traced execution
++ Currently working on:  x86 Assembly & control flow
++ Learning:  Disassembly and basic malware logic 
++ Latest achievement:  Reversed first crackme, traced execution
 
 ```
 </div>
