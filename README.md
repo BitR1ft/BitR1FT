@@ -53,7 +53,9 @@
 <!--<img src="https://github-readme-stats.vercel.app/api?username=bitr1ft&show_icons=true&theme=radical" alt="bitr1ft" >-->
 <img src="https://nirzak-streak-stats.vercel.app/?user=bitr1ft&theme=dark&hide_border=false" alt="bitr1ft" >
 <!--<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bitr1ft&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact" alt="bitr1ft" >-->
+<!--<img alt="snake eating my contributions" src="https://raw.githubusercontent.com/salesp07/salesp07/output/github-contribution-grid-snake.svg" />-->
 </p>
+
 
 <br><br>
 
@@ -78,6 +80,7 @@
 </p>
 
 <br>
+
 
 
 [![](https://visitcount.itsvg.in/api?id=bitr1ft&icon=0&color=0)](https://visitcount.itsvg.in)
