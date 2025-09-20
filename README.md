@@ -39,7 +39,7 @@
 <br><br>
 
 ### 📧 Contact Info
-- **🔐 Secure Email:** [4deel@proton.me](mailto:4deel@proton.me)
+- **🔐 Email:** [4deel@proton.me](mailto:4deel@proton.me)
 - **📝 Blog:** [medium.com/@bitr1ft](https://medium.com/@bitr1ft)
 - **🐦 Twitter:** [@BitR1FT](https://x.com/BitR1FT)
 - **💼 LinkedIn:** [linkedin.com/in/4deel](https://www.linkedin.com/in/4deel/)
