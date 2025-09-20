@@ -74,7 +74,7 @@
   <a href="https://x.com/bitr1ft">
     <img src="https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white" alt="X">
   </a>
-  <a href="mailto:4deel@proton.me">
+  <a href="mailto:ctf.adeel@gmail.com">
     <img src="https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white" alt="Email">
   </a>
 </p>
