@@ -62,7 +62,7 @@
   <a href="https://instagram.com/_4deel">
     <img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white" alt="Instagram">
   </a>
-  <a href="https://linkedin.com/in/4deel">
+  <a href="https://www.linkedin.com/in/4deel/">
     <img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white" alt="LinkedIn">
   </a>
   <a href="https://medium.com/@bitr1ft">
