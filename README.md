@@ -2,7 +2,7 @@
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=FFFFFF&center=true&vCenter=true&width=940&lines=Hey+there!+I'm+Adeel+Haider+%F0%9F%91%8B" alt="Typing SVG" />
 </div>
 <p align="center">
-  <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 😈
+  <em>"Reverse engineering and pwn are my jam — if it crashes, I'm probably smiling."</em> 
 </p>
 
 <br>
