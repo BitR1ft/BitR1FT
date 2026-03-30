@@ -98,9 +98,9 @@ Certified: **ISO/IEC 27001:2022**
 
 
 
-<p align="center">
+<!-- <p align="center">
   <img src="https://nirzak-streak-stats.vercel.app/?user=bitr1ft&theme=dark&hide_border=false" alt="GitHub streak" />
-</p>
+</p> -->
 
 
 
