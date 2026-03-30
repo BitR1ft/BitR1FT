@@ -26,21 +26,23 @@
 
 ```diff
 
-          ____  _ _    ____  __ _____  ______
-         |  _ \(_) |  |  _ \/  |  ___||__  __|
-         | |_) |_| |_ | |_) |  | |__    | |   
-         |  _ <| | __||  _ <|  |  __|   | |   
-         | |_) | | |_ | | \ |  | |      | |   
-         |____/|_|\__||_|  \|__|_|      |_|   
+ ____  _ _    ____  __ _____  ______
+|  _ \(_) |  |  _ \/  |  ___||__  __|
+| |_) |_| |_ | |_) |  | |__    | |   
+|  _ <| | __||  _ <|  |  __|   | |   
+| |_) | | |_ | | \ |  | |      | |   
+|____/|_|\__||_|  \|__|_|      |_|   
         
-        + Penetration testing — web, network, AD, cloud
-        + CTF competitor — web, forensics, misc
-        + Building UniVex — full agentic pentest platform
-        + Interning as Full Stack Developer @ NASTP, Air University
-        + RE instinct still shows up in every engagement
++ Penetration testing — web, network, AD, cloud
++ CTF competitor — web, forensics, misc
++ Building UniVex — full agentic pentest platform
++ Interning as Full Stack Developer @ NASTP, Air University
++ RE instinct still shows up in every engagement
 
 ```
 </div>
+
+
 
 
 
