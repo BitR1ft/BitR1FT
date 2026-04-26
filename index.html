@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BitR1FT | Adeel Haider - Cybersecurity Portfolio</title>
+  <meta name="description" content="Cybersecurity undergraduate at Air University focused on threat detection, SIEM, and offensive security. HackTheBox enthusiast & bug bounty researcher.">
+  <link rel="icon" href="profile.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-brand">&lt;BitR1FT /&gt;</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="blog.html">Writeups</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#contact">Contact</a>
+      <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="github-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+      </a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="blog.html">Writeups</a>
+    <a href="#certifications">Certifications</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <main>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="profile-wrapper">
+          <img src="profile.jpg" alt="Adeel Haider (BitR1FT)" class="profile-img">
+          <div class="profile-badge">BitR1FT</div>
+        </div>
+        <div class="hero-text">
+          <div class="hero-prompt" id="typing-text" data-text="$ whoami">
+            <span class="cursor-blink">|</span>
+          </div>
+          <h1 class="hero-name">
+            Muhammad Adeel<br>
+            <span class="green">Haider</span>
+          </h1>
+          <p class="hero-desc">
+            Cybersecurity undergraduate at <strong>Air University</strong> focused on threat detection, SIEM, and offensive security. CTF player under <span class="mono">BitR1FT</span> and bug bounty researcher on HackerOne.
+          </p>
+          <div class="hero-tags">
+            <span class="tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg> Offensive Security</span>
+            <span class="tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg> Threat Detection</span>
+            <span class="tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg> HackTheBox</span>
+            <span class="tag"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 2 1.88 1.88M14.12 3.88 16 2M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg> Bug Bounty</span>
+          </div>
+          <div class="hero-buttons">
+            <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+              GitHub
+            </a>
+            <a href="mailto:ctf.adeel@gmail.com" class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              Contact Me
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">// About</h2>
+          <p class="section-sub">A brief overview of who I am and what I do</p>
+          <div class="section-line"></div>
+        </div>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>I am a cybersecurity undergraduate at <strong>Air University, Islamabad</strong> (NCSA Department), currently in my 4th semester of a Bachelor of Science in Cyber Security (BSCYS). My focus lies at the intersection of offensive security and defensive operations, with deep interests in threat detection, SIEM systems, and real-world vulnerability research.</p>
+            <p>I spend most of my time doing bug bounty research and competing in CTFs under the handle <span class="mono">BitR1FT</span>. I have completed multiple full attack chains on HackTheBox machines and have submitted security findings on HackerOne, covering vulnerability classes such as integer overflow, SSRF, and pool redirect attack vectors.</p>
+            <p>My project work spans both attacking and defending. I have built an autonomous penetration testing platform powered by AI agents, a self-hosted SIEM with custom Sigma detections and threat intel integration, and several security tools for network forensics, malware analysis, and credential management. I am comfortable across both sides of security with a strong emphasis on practical, hands-on skills.</p>
+          </div>
+          <div>
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+                  Education
+                </div>
+              </div>
+              <div class="info-card-body">
+                <p class="name">BS Cyber Security (BSCYS)</p>
+                <p class="detail">Air University, Islamabad — NCSA Department</p>
+                <p class="meta">Aug 2024 - Present | 4th Semester</p>
+                <p class="extra">Coursework: Network Security, Data Structures, OOP, Computer Networks, OS, Intro to Cyber Security, Programming Fundamentals</p>
+                <div class="info-sep"></div>
+                <p class="name">ICS - Computer Science</p>
+                <p class="detail">Army Public School &amp; College (PASBAN), Rawalpindi — FBISE</p>
+                <p class="meta">Aug 2022 - May 2024</p>
+              </div>
+            </div>
+            <div class="info-card" style="margin-top: 1rem;">
+              <div class="info-card-header">
+                <div class="info-card-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                  CTF Competitions
+                </div>
+              </div>
+              <div class="info-card-body">
+                <p>Placed in BlackHat 2025, AirTech, Softec, CSL, and SudoFuzzers CTF competitions. Active HackTheBox player under BitR1FT with 6+ completed full attack chains (S10).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- ═══ PROJECTS ═══ -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">// Projects</h2>
+          <p class="section-sub">Security tools and platforms I've built</p>
+          <div class="section-line"></div>
+        </div>
+        <div class="card-grid cols-3">
+
+          <a href="https://github.com/BitR1ft/UniVex" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+              <div>
+                <div class="card-title">UniVex <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">Jan 2025 - Present</div>
+              </div>
+            </div>
+            <p class="card-desc">Full-stack agentic penetration testing platform that autonomously executes the complete offensive kill chain from recon to post-exploitation. Orchestrates 13 specialized LangGraph ReAct agents with 145+ integrated security tools, Neo4j-backed live attack graph with BloodHound overlay, and compliance report generation.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">FastAPI</span>
+              <span class="badge badge-outline">Next.js 14</span>
+              <span class="badge badge-outline">Neo4j</span>
+              <span class="badge badge-outline">LangGraph</span>
+              <span class="badge badge-outline">Docker</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/BitR1ft/SentinelHive" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg></div>
+              <div>
+                <div class="card-title">SentinelHive <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">Jan 2026 - Present</div>
+              </div>
+            </div>
+            <p class="card-desc">Full SIEM environment using Wazuh with ELK stack for centralized log ingestion and real-time visualization. 40+ custom Sigma detection rules mapped to MITRE ATT&CK, Python triage pipeline with IOC enrichment via AbuseIPDB and VirusTotal, and MISP/OpenCTI threat intel integration with automated blocking.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">Wazuh</span>
+              <span class="badge badge-outline">Elastic Stack</span>
+              <span class="badge badge-outline">Python</span>
+              <span class="badge badge-outline">MISP</span>
+              <span class="badge badge-outline">MITRE ATT&CK</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/BitR1ft/ICTDS" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg></div>
+              <div>
+                <div class="card-title">ICTDS <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">Sep 2025 - Jan 2026</div>
+              </div>
+            </div>
+            <p class="card-desc">Threat detection application using 7 data structures (Trie, AVL Tree, Graph, Max-Heap, Hash Table) for malware signature matching, ransomware monitoring, and intrusion analysis with Aho-Corasick multi-pattern engine and BFS/DFS artifact discovery.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">C++</span>
+              <span class="badge badge-outline">Python</span>
+              <span class="badge badge-outline">Data Structures</span>
+              <span class="badge badge-outline">Aho-Corasick</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/BitR1ft/NetSpector" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+              <div>
+                <div class="card-title">NetSpector <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">Sep 2025 - Jan 2026</div>
+              </div>
+            </div>
+            <p class="card-desc">PCAP/PCAPNG analyzer with deep packet inspection across Ethernet, IP, TCP, UDP, ICMP, DNS, and HTTP. Detection for port scans, SYN floods, DNS tunneling, credential leakage, TCP session reconstruction, bidirectional flow analysis, and file carving from streams.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">Python</span>
+              <span class="badge badge-outline">Wireshark</span>
+              <span class="badge badge-outline">PCAP Analysis</span>
+              <span class="badge badge-outline">Protocol Dissection</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/BitR1ft/VaultGuard" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              <div>
+                <div class="card-title">VaultGuard++ <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">May 2025 - Jun 2025</div>
+              </div>
+            </div>
+            <p class="card-desc">Offline-first, zero-knowledge password manager using XChaCha20-Poly1305, AES-256, and Argon2id with brute-force prevention, session lockout, audit trails, and encrypted cloud backup via Google Drive API with OAuth 2.0.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">C++</span>
+              <span class="badge badge-outline">Python</span>
+              <span class="badge badge-outline">XChaCha20-Poly1305</span>
+              <span class="badge badge-outline">AES-256</span>
+              <span class="badge badge-outline">Argon2id</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/BitR1ft/Fly-and-Spy" target="_blank" rel="noopener noreferrer" class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 2 1.88 1.88M14.12 3.88 16 2M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></svg></div>
+              <div>
+                <div class="card-title">Fly and Spy <svg class="card-ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+                <div class="card-meta">Dec 2024 - Jan 2025</div>
+              </div>
+            </div>
+            <p class="card-desc">Stealth keylogger embedded inside a Flappy Bird clone demonstrating trojanizing, Windows startup persistence, and multi-threaded background exfiltration for academic malware awareness.</p>
+            <div class="tech-tags">
+              <span class="badge badge-outline">Python</span>
+              <span class="badge badge-outline">Windows Persistence</span>
+              <span class="badge badge-outline">Multi-threading</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- ═══ CERTIFICATIONS ═══ -->
+    <section class="section" id="certifications">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">// Certifications</h2>
+          <p class="section-sub">Professional certifications and achievements</p>
+          <div class="section-line"></div>
+        </div>
+        <div class="card-grid cols-3">
+
+          <div class="card card-glow">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg></div>
+              <div>
+                <div class="card-title">ISC2 CC</div>
+              </div>
+            </div>
+            <p class="card-desc">ISC2 Certified in Cybersecurity — foundational cybersecurity certification covering security concepts, networking, and basic operations.</p>
+            <span class="badge badge-primary">ISC2 — 2024</span>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+              <div>
+                <div class="card-title">ISO/IEC 27001:2022</div>
+              </div>
+            </div>
+            <p class="card-desc">ISO/IEC 27001:2022 Lead Auditor certification demonstrating proficiency in information security management system auditing and compliance.</p>
+            <span class="badge badge-primary">MasterMind Certification</span>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c.78 0 1.5-.38 1.94-.97.44-.6.56-1.38.33-2.08a3.27 3.27 0 0 0-4.54 0 2.05 2.05 0 0 0 .33 2.08c.44.6 1.16.97 1.94.97Z"/><path d="M14.5 17.5c0 1.38-1.12 2.5-2.5 2.5s-2.5-1.12-2.5-2.5c0-1.66 2.5-4.5 2.5-4.5s2.5 2.84 2.5 4.5Z"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m8 5 2-2"/><path d="m14 5 2-2"/><path d="m8 19 2 2"/><path d="m14 19 2 2"/></svg></div>
+              <div>
+                <div class="card-title">HackTheBox</div>
+              </div>
+            </div>
+            <p class="card-desc">Completed 6+ full attack chains on S10 machines: Interpreter, CCTV, VariaType, Kobold, DevArea, and FACTS. Active ranking with continued machine pwnage.</p>
+            <div style="display:flex;gap:0.375rem;margin-top:0.75rem;">
+              <span class="badge" style="color:var(--emerald);border-color:rgba(34,197,94,0.3);background:var(--emerald-bg);">3 Easy</span>
+              <span class="badge" style="color:var(--amber);border-color:rgba(245,158,11,0.3);background:var(--amber-bg);">3 Medium</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">// Contact</h2>
+          <p class="section-sub">Get in touch for collaborations, opportunities, or just to chat</p>
+          <div class="section-line"></div>
+        </div>
+        <div class="contact-grid">
+
+          <a href="mailto:ctf.adeel@gmail.com" class="contact-card">
+            <div class="contact-inner">
+              <div class="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+              <div>
+                <div class="contact-label">Email</div>
+                <div class="contact-value">ctf.adeel@gmail.com</div>
+              </div>
+            </div>
+          </a>
+
+          <div class="contact-card">
+            <div class="contact-inner">
+              <div class="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div>
+                <div class="contact-label">Phone</div>
+                <div class="contact-value">0330-6869777</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-inner">
+              <div class="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div>
+                <div class="contact-label">Location</div>
+                <div class="contact-value">Islamabad, Pakistan</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="contact-card">
+            <div class="contact-inner">
+              <div class="contact-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></div>
+              <div>
+                <div class="contact-label">GitHub</div>
+                <div class="contact-value">BitR1FT <svg class="contact-ext" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg></div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-left">&copy; 2025 <span class="green">BitR1FT</span> — Adeel Haider</p>
+      <p class="footer-right">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+        Built with passion &amp; caffeine
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="accent">pwn all the things</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

