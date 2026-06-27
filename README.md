@@ -36,7 +36,7 @@
 + Penetration testing — web, network, AD, cloud
 + CTF competitor — web, forensics, misc
 + Building UniVex — full agentic pentest platform
-+ Interning as Full Stack Developer @ NASTP, Air University
++ Interning as VAPT @ NCCIA, Islamabad
 + RE instinct still shows up in every engagement
 
 ```
@@ -62,7 +62,7 @@
 
 ## About Me
 
-I'm a Cybersecurity undergrad at **Air University, Islamabad** (4th semester), currently interning as a Full Stack Developer at **NASTP**. My path started in reverse engineering — x86 assembly, crackmes, tracing execution flows — but I've shifted my main focus to penetration testing.
+I'm a Cybersecurity undergrad at **Air University, Islamabad** (4th semester), currently interning as a VAPT at **NCCIA**. My path started in reverse engineering — x86 assembly, crackmes, tracing execution flows — but I've shifted my main focus to penetration testing.
 
 Right now I'm deep into:
 - **Web application pentesting** and bug bounty research
