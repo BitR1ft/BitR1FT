@@ -49,7 +49,7 @@
 <br>
 
 <p align="center">
-  <a href="mailto:4deel@proton.me"><img src="https://img.shields.io/badge/Email-4deel%40proton.me-blue?logo=protonmail&logoColor=white" alt="Email"></a>
+  <a href="mailto:adeelhaider304@gmail.com"><img src="https://img.shields.io/badge/Email-adeelhaider304%40gmail.com-blue?logo=gmail&logoColor=white" alt="Email"></a>
   <a href="https://reddit.com/user/BitR1FT"><img src="https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white" alt="Reddit"></a>
   <a href="https://medium.com/@bitr1ft"><img src="https://img.shields.io/badge/Medium-12100E?logo=medium&logoColor=white" alt="Medium"></a>
   <a href="https://www.linkedin.com/in/4deel/"><img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white" alt="LinkedIn"></a>
